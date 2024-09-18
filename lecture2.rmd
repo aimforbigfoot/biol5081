@@ -1,0 +1,37 @@
+---
+title: "Lecture 2 Submission"
+author: "Ahmed Nadeem (adapted from Eryn McFarlane)"
+date: '`Sep 18, 2024'
+---
+
+# Assignment:
+
+## What distribution are your data likely from? (And Why Do I Think This)
+### - Since I work with psyophysical data, most of my data would take the normal distribution, because a lot of responses from my participants are around an average value (that i am trying to find, and that I define as the point of subjective equality)
+  
+
+  
+# Using the distribution that you've chosen, change the different parameters. What happens when you change the parameters for the distribution? Describe how the shape changes.
+### - If I change the parameters, mainly the SD, then the curve gets wider/more narrow, depending if it is a large or small value 
+
+height<-rnorm(10000, mean=5.0, sd=9.09)
+hist(height,  ylim = c(0,10) )
+
+plot(density(height))
+
+
+
+# Can you simulate data that looks like what you expect your data looks like? What are the parameters for that?
+### - It would be the same as the graph above, however, I'd be more likely to plot them in a CDF, and then find the 50% point, or the average 
+CDF <- ecdf(height )
+plot( CDF )
+
+
+
+
+
+
+
+
+
+
