@@ -1,0 +1,508 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lecture 3 - Ahmed's Submission},
+  pdfauthor={Ahmed Nadeem},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lecture 3 - Ahmed's Submission}
+\author{Ahmed Nadeem}
+\date{2024-10-03}
+
+\begin{document}
+\maketitle
+
+\hypertarget{im-not-sure-why-my-r-code-is-going-over-the-text-but-here-is-my-github-repo-for-this-course-the-file-for-this-is-called-testingforlec3again.rmd}{%
+\subsection{I'm not sure why my R code is going over the text, but here
+is my github repo for this course, the file for this is called
+``testingForLec3Again.Rmd''}\label{im-not-sure-why-my-r-code-is-going-over-the-text-but-here-is-my-github-repo-for-this-course-the-file-for-this-is-called-testingforlec3again.rmd}}
+
+We're going to simulate some data that can be used in each of the
+following tests.
+
+The response variable is normally distributed, and then we're going to
+back calculate some predictor variables.
+
+NOTE: There are 9 questions below to answer. Do your best to answer them
+in full sentences. This is part of what we're practicing in this class.
+
+\emph{QUESTION 1}: Describe the trait that you're simulating. This can
+be a real trait that you are working on, or hope to work on, or it can
+be completely made up. - Answer: I am working on the perception of
+space, so that means I want to see how well people are able at
+understanding what they look at and how well do they interact and move
+in that place that they look at. So for the later part, I literally
+measure how well you can place an item down at a given location (given
+some handicap or sensation cue). And to see if there are biases in the
+way you live/interact in the world, I have to measure how ``off'' you
+were from going to a location. And that is what
+\texttt{distanceFromTargetError} means in the little snippet below!
+
+Pay special attention to the N that you're expecting, the mean, and the
+sd around the mean.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rnorm}\NormalTok{(}\DecValTok{500}\NormalTok{, }\FloatTok{2.5}\NormalTok{, }\DecValTok{5}\NormalTok{)}\OtherTok{{-}\textgreater{}}\NormalTok{distanceFromTargetError }\DocumentationTok{\#\#\# change this to be a trait that you\textquotesingle{}re actually interested in, with an appropriate distribution! }
+
+\CommentTok{\# }
+
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{density}\NormalTok{(distanceFromTargetError))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{testingForLec3Again_files/figure-latex/simulate trait of interest-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{min}\NormalTok{(distanceFromTargetError)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -10.71907
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{max}\NormalTok{(distanceFromTargetError)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 17.91235
+\end{verbatim}
+
+\emph{QUESTION 2}: Describe the predictor variable. What does this mean
+biologically to your trait of interest. How did you decide on the
+numbers in yes on line 33? - Answer: Biologically speaking, this
+\texttt{distanceFromTargetError} is me measuring the error from a given
+location and the location chosen by a participant. In biological terms,
+I am (hopefully) measuring the brain's internal representation of space
+based on the cues it used to understand space AND THEN I will also be
+measuring how well the motor response was at recreating and
+adjusting/using that internal representation. ANd how did I decide it
+lies on a line? well, if space itself lies on a line (3 lines cuz 3
+axes) so that means it is natural for me to say that the error also lies
+on a line (error = actual position - position placed by participant)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{yes}\OtherTok{\textless{}{-}}\FunctionTok{sample}\NormalTok{(distanceFromTargetError, }\AttributeTok{size =} \DecValTok{30}\NormalTok{, }\AttributeTok{replace=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{ifelse}\NormalTok{(}\AttributeTok{test =}\NormalTok{ distanceFromTargetError}\SpecialCharTok{\textgreater{}}\FloatTok{2.5}\NormalTok{, }\AttributeTok{yes =} \FloatTok{0.95}\NormalTok{,}\AttributeTok{no =}  \FloatTok{0.15}\NormalTok{)) }\DocumentationTok{\#\#\#\# play with this line! Is the test statistically significant. When is it not?}
+\NormalTok{predictor\_t.test}\OtherTok{\textless{}{-}}\NormalTok{(distanceFromTargetError }\SpecialCharTok{\%in\%}\NormalTok{ yes)}
+
+\FunctionTok{cbind.data.frame}\NormalTok{(distanceFromTargetError, predictor\_t.test)}\OtherTok{{-}\textgreater{}}\NormalTok{data}
+
+\FunctionTok{mean}\NormalTok{(data[}\FunctionTok{which}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{predictor\_t.test}\SpecialCharTok{==}\ConstantTok{TRUE}\NormalTok{),}\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5.293438
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{mean}\NormalTok{(data[}\FunctionTok{which}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{predictor\_t.test}\SpecialCharTok{==}\ConstantTok{FALSE}\NormalTok{),}\DecValTok{1}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2.63836
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(distanceFromTargetError}\SpecialCharTok{\textasciitilde{}}\NormalTok{predictor\_t.test, }\AttributeTok{data=}\NormalTok{data) }\DocumentationTok{\#\#\# this does a two sample t{-}test. What would a one sample t test be testing? How would you do that?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Welch Two Sample t-test
+## 
+## data:  distanceFromTargetError by predictor_t.test
+## t = -3.7967, df = 36.296, p-value = 0.0005385
+## alternative hypothesis: true difference in means between group FALSE and group TRUE is not equal to 0
+## 95 percent confidence interval:
+##  -4.072933 -1.237224
+## sample estimates:
+## mean in group FALSE  mean in group TRUE 
+##            2.638360            5.293438
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# plots our two samples for distribution}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{density}\NormalTok{(data[}\FunctionTok{which}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{predictor\_t.test}\SpecialCharTok{==}\ConstantTok{FALSE}\NormalTok{),}\DecValTok{1}\NormalTok{]), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{main=}\StringTok{"Two sample t test"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(data[}\FunctionTok{which}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{predictor\_t.test}\SpecialCharTok{==}\ConstantTok{TRUE}\NormalTok{),}\DecValTok{1}\NormalTok{]), }\AttributeTok{ylim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{20}\NormalTok{,}\DecValTok{20}\NormalTok{), }\AttributeTok{main=}\StringTok{"Two Sample T test"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{testingForLec3Again_files/figure-latex/simulate predictor variable for a t test-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#plot one sample distribution}
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{density}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{distanceFromTargetError), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{main=}\StringTok{"One sample t test"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{testingForLec3Again_files/figure-latex/simulate predictor variable for a t test-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{t.test}\NormalTok{(data}\SpecialCharTok{$}\NormalTok{distanceFromTargetError) }\DocumentationTok{\#\#\# what is this test doing?; t.test(data$distanceFromTargetError, mu = mean(distanceFromTargetError)) }\AlertTok{\#\#\#}\DocumentationTok{ what is this test doing?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  One Sample t-test
+## 
+## data:  data$distanceFromTargetError
+## t = 12.724, df = 499, p-value < 2.2e-16
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  2.365668 3.229660
+## sample estimates:
+## mean of x 
+##  2.797664
+\end{verbatim}
+
+\emph{QUESTION 3}: Write one sentence where you report your t.text. -
+Answer: if I had a sample of 30 participants, where i picked these
+samples based on that prob function(took me a while to understand LOL).
+then i would not have statstically signifcant data cuz my SD from the
+first code block is large. making the 2 samples VERY big, however, the
+one sample t test, comparing to a mean of 0 (which is not my mean of my
+data set.)
+
+Next we're going to move to Anova. So, the first thing we'll do is break
+our response variable (same one!) into 5 different categories, just as
+we did for the t-tests.
+
+\emph{QUESTION 4}: Describe the predictor variable. What does this mean
+biologically to your trait of interest. How did you decide on the
+numbers in lines 60, 61, 62, 63? - Answer: I picked the sample size
+numbers based on how many participants I usually get in my studies
+(around 30-50).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trait\_of\_interest }\OtherTok{=}\NormalTok{ distanceFromTargetError}
+\NormalTok{test1}\OtherTok{\textless{}{-}}\FunctionTok{sample}\NormalTok{(trait\_of\_interest, }\DecValTok{20}\NormalTok{, }\AttributeTok{replace=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{ifelse}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textgreater{}}\DecValTok{7}\NormalTok{, }\FloatTok{0.95}\NormalTok{, }\FloatTok{0.15}\NormalTok{))}
+\NormalTok{test2}\OtherTok{\textless{}{-}}\FunctionTok{sample}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)], }\DecValTok{200}\NormalTok{, }\AttributeTok{replace=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{ifelse}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)] }\SpecialCharTok{\textgreater{}}\DecValTok{4}\NormalTok{, }\FloatTok{0.95}\NormalTok{, }\FloatTok{0.15}\NormalTok{))}
+\NormalTok{test3}\OtherTok{\textless{}{-}}\FunctionTok{sample}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==}\ConstantTok{FALSE}\NormalTok{)], }\DecValTok{200}\NormalTok{, }\AttributeTok{replace=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{ifelse}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)] }\SpecialCharTok{\textgreater{}}\DecValTok{0}\NormalTok{, }\FloatTok{0.95}\NormalTok{, }\FloatTok{0.15}\NormalTok{))}
+\NormalTok{test4}\OtherTok{\textless{}{-}}\FunctionTok{sample}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==}\ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test3 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)], }\DecValTok{200}\NormalTok{, }\AttributeTok{replace=}\ConstantTok{FALSE}\NormalTok{, }\AttributeTok{prob =} \FunctionTok{ifelse}\NormalTok{(trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==}\ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test3 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)] }\SpecialCharTok{\textgreater{}{-}}\DecValTok{4}\NormalTok{, }\FloatTok{0.95}\NormalTok{, }\FloatTok{0.15}\NormalTok{))}
+\NormalTok{test5}\OtherTok{\textless{}{-}}\NormalTok{trait\_of\_interest[}\FunctionTok{which}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==} \ConstantTok{FALSE}\SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test3 }\SpecialCharTok{==} \ConstantTok{FALSE} \SpecialCharTok{|}\NormalTok{ trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test4 }\SpecialCharTok{==} \ConstantTok{FALSE}\NormalTok{)]}
+
+
+\FunctionTok{plot}\NormalTok{(}\FunctionTok{density}\NormalTok{(test1), }\AttributeTok{ylim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\FloatTok{0.1}\NormalTok{), }\AttributeTok{main=}\StringTok{"Anovas"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(test2), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(test3), }\AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(test4), }\AttributeTok{col=}\StringTok{"purple"}\NormalTok{)}
+\FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(test5), }\AttributeTok{col=}\StringTok{"yellow"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{testingForLec3Again_files/figure-latex/Anova-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{anova\_predictor}\OtherTok{\textless{}{-}}\FunctionTok{data.frame}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test1 }\SpecialCharTok{==} \ConstantTok{TRUE}\NormalTok{, }\StringTok{"group1"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test2 }\SpecialCharTok{==} \ConstantTok{TRUE}\NormalTok{, }\StringTok{"group2"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test3 }\SpecialCharTok{==} \ConstantTok{TRUE}\NormalTok{, }\StringTok{"group3"}\NormalTok{, }\FunctionTok{ifelse}\NormalTok{(trait\_of\_interest }\SpecialCharTok{\%in\%}\NormalTok{ test4 }\SpecialCharTok{==} \ConstantTok{TRUE}\NormalTok{, }\StringTok{"group4"}\NormalTok{, }\StringTok{"group5"}\NormalTok{)))))}
+
+\NormalTok{data2}\OtherTok{\textless{}{-}}\FunctionTok{cbind.data.frame}\NormalTok{(data, anova\_predictor)}
+\FunctionTok{names}\NormalTok{(data2)}\OtherTok{\textless{}{-}}\FunctionTok{c}\NormalTok{(}\StringTok{"trait\_of\_interest"}\NormalTok{, }\StringTok{"predictor\_t.test"}\NormalTok{, }\StringTok{"anova\_predictor"}\NormalTok{)}
+
+
+\FunctionTok{anova}\NormalTok{(}\FunctionTok{aov}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textasciitilde{}}\NormalTok{anova\_predictor, }\AttributeTok{data=}\NormalTok{data2)) }\DocumentationTok{\#\#\# what does this do?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: trait_of_interest
+##                  Df Sum Sq Mean Sq F value    Pr(>F)    
+## anova_predictor   4 2403.9  600.97    30.8 < 2.2e-16 ***
+## Residuals       495 9658.3   19.51                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{anova}\NormalTok{(}\FunctionTok{lm}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textasciitilde{}}\NormalTok{anova\_predictor, }\AttributeTok{data=}\NormalTok{data2)) }\DocumentationTok{\#\#\# what does this do? }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Variance Table
+## 
+## Response: trait_of_interest
+##                  Df Sum Sq Mean Sq F value    Pr(>F)    
+## anova_predictor   4 2403.9  600.97    30.8 < 2.2e-16 ***
+## Residuals       495 9658.3   19.51                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(}\FunctionTok{aov}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textasciitilde{}}\NormalTok{anova\_predictor, }\AttributeTok{data=}\NormalTok{data2)) }\DocumentationTok{\#\#\# what does this do? What do you notice about the last three tests?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                  Df Sum Sq Mean Sq F value Pr(>F)    
+## anova_predictor   4   2404   601.0    30.8 <2e-16 ***
+## Residuals       495   9658    19.5                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# what information is missing here that you wished you had to understand your study better?}
+\NormalTok{analysis\_of\_variance}\OtherTok{\textless{}{-}}\FunctionTok{aov}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textasciitilde{}}\NormalTok{anova\_predictor, }\AttributeTok{data=}\NormalTok{data2) }\DocumentationTok{\#\#name the model to keep it for downstream}
+\FunctionTok{TukeyHSD}\NormalTok{(analysis\_of\_variance, }\AttributeTok{conf.level =} \FloatTok{0.95}\NormalTok{) }\DocumentationTok{\#\#\# what does this do, and where are the differences?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = trait_of_interest ~ anova_predictor, data = data2)
+## 
+## $anova_predictor
+##                    diff        lwr         upr     p adj
+## group2-group1 -3.625755  -6.461972 -0.78953769 0.0045977
+## group3-group1 -5.130928  -8.072807 -2.18904943 0.0000233
+## group4-group1 -6.891550  -9.973073 -3.81002732 0.0000000
+## group5-group1 -8.565449 -11.518271 -5.61262624 0.0000000
+## group3-group2 -1.505173  -2.944996 -0.06535003 0.0353797
+## group4-group2 -3.265795  -4.972905 -1.55868559 0.0000024
+## group5-group2 -4.939694  -6.401747 -3.47764014 0.0000000
+## group4-group3 -1.760622  -3.638052  0.11680841 0.0780517
+## group5-group3 -3.434521  -5.092267 -1.77677434 0.0000002
+## group5-group4 -1.673899  -3.568431  0.22063428 0.1119188
+\end{verbatim}
+
+\emph{QUESTION 5}: Write one sentence where you report your ANOVA and
+Tukey tests. What did you find, and how do you report this? - Answer:
+The ANOVA test shows me that there is a lot of variablity that is not
+explained by the groups (lots of noise). This is because the resdiuals
+value is large. Then there is als oa large F value, which shows me that
+there is a large diff b/w the groups relative to their variablity.
+
+Again, our simulations aren't to be actually causal, I'm simulating
+predictor variables to fit a response I've already made. Normally, we
+would simulate the response variables from more thoughtful predictor
+variables.
+
+\emph{QUESTION 6}:what is the difference between the assumed
+distributions for the prior predictor variables, and this one? - Answer:
+the difference is that for the 5 categories made for the anova are based
+on the data set itself, but the last 2 were just based on random chance
+(if i understand the code correctly).
+
+\emph{QUESTION 7}: Describe the predictor variable. What does this mean
+biologically to your trait of interest. How did you decide on the
+numbers in line 104? - Answer: IT would show me an aspect that is
+realted to the mottor inaccuracy in humans, such as distance or
+percentage of a cue shown to an individual/participant.
+
+\emph{QUESTION 8}: What is the difference between a regression and a
+correlation? When would you use each? How does the test stat from the
+correlation compare to the effect size from the regression? - Answer: 1.
+Regresssion is used to tell how associated two variables are, and it
+tells me how to predict them with a line of best fit 2. Correlation are
+used to tell me what direction and how tightly the two variables
+``travel'' together so to speak (strong or weak) and if it going up, or
+down on a graph (positive and negative correlations ) 3. I would use a
+correlation when I want to know if there is a trend in any data set, i
+would use a regression to predict one variable against another. 4. The
+correlation (0.977) and r\^{}2 of 0.9954 show me that there is a strong
+correlation and predictive power in my data set.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{linear\_regression\_predictor}\OtherTok{\textless{}{-}}\FloatTok{12.5}\SpecialCharTok{*}\NormalTok{trait\_of\_interest}\SpecialCharTok{+}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{) }\DocumentationTok{\#\#\# change these numbers!! Remember that this is backwards from how we did this on day 1, so the slope should go the other way!}
+\NormalTok{data3}\OtherTok{\textless{}{-}}\FunctionTok{cbind}\NormalTok{(data2, linear\_regression\_predictor)}
+
+\NormalTok{lm}\OtherTok{\textless{}{-}}\FunctionTok{lm}\NormalTok{(trait\_of\_interest}\SpecialCharTok{\textasciitilde{}}\NormalTok{linear\_regression\_predictor, }\AttributeTok{data=}\NormalTok{data3)}
+\FunctionTok{summary}\NormalTok{(lm)}\DocumentationTok{\#\#\# what is the output here? What are we interested in understanding from this model? How do we get m? How do we get the intercept?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = trait_of_interest ~ linear_regression_predictor, 
+##     data = data3)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.01038 -0.20705 -0.00808  0.20327  1.04970 
+## 
+## Coefficients:
+##                              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)                 0.0156139  0.0113936    1.37    0.171    
+## linear_regression_predictor 0.0798536  0.0001614  494.68   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.3133 on 998 degrees of freedom
+## Multiple R-squared:  0.9959, Adjusted R-squared:  0.9959 
+## F-statistic: 2.447e+05 on 1 and 998 DF,  p-value: < 2.2e-16
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{eq }\OtherTok{=} \FunctionTok{paste0}\NormalTok{(}\StringTok{"y = "}\NormalTok{, }\FunctionTok{round}\NormalTok{(lm}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{2}\NormalTok{],}\DecValTok{1}\NormalTok{), }\StringTok{"*x"}\NormalTok{, }\StringTok{"+"}\NormalTok{,}\FunctionTok{round}\NormalTok{(lm}\SpecialCharTok{$}\NormalTok{coefficients[}\DecValTok{1}\NormalTok{],}\DecValTok{1}\NormalTok{), }\StringTok{", R\^{}2="}\NormalTok{, }\FunctionTok{round}\NormalTok{(}\FunctionTok{summary}\NormalTok{(lm)}\SpecialCharTok{$}\NormalTok{adj.r.squared, }\AttributeTok{digits=}\DecValTok{3}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(data3}\SpecialCharTok{$}\NormalTok{linear\_regression\_predictor, data3}\SpecialCharTok{$}\NormalTok{trait\_of\_interest, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{main=}\NormalTok{eq)}
+\FunctionTok{abline}\NormalTok{(lm, }\AttributeTok{col=}\StringTok{"black"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{testingForLec3Again_files/figure-latex/Linear Regression and correlation-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# with the same data:}
+\FunctionTok{cor.test}\NormalTok{(data3}\SpecialCharTok{$}\NormalTok{trait\_of\_interest, data3}\SpecialCharTok{$}\NormalTok{linear\_regression\_predictor) }\DocumentationTok{\#\#\# compare the sample estimate to the 1) simulated effect sizes and 2) to the estimated effect size }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Pearson's product-moment correlation
+## 
+## data:  data3$trait_of_interest and data3$linear_regression_predictor
+## t = 494.68, df = 998, p-value < 2.2e-16
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.9976986 0.9982042
+## sample estimates:
+##      cor 
+## 0.997967
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# how does the correlation estimate change when you change line 104?}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{QUESTION 9}: Report your regression and correlation in a sentence.
+Differentiate between them and what you report for each. - Answer: The
+linear regression model indicated that for every unit increase in
+linear\_regression\_predictor, the trait\_of\_interest increases by
+0.079 units (R² = 0.9954, p \textless{} 2e-16). The correlation between
+the two variables was 0.9977 (p \textless{} 2e-16), indicating a strong
+positive relationship.
+
+\end{document}
