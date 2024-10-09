@@ -1,0 +1,584 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Lecture 5 Logistic, Poisson and Negative Binomial Regressions},
+  pdfauthor={Eryn McFarlane},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Lecture 5 Logistic, Poisson and Negative Binomial Regressions}
+\author{Eryn McFarlane}
+\date{2024-10-09}
+
+\begin{document}
+\maketitle
+
+We're going to simulate some predictor variables for each logistic
+regression, poisson regression and negative bionomial regression, and
+then analyze each.
+
+\subsection{Logistic Regression}\label{logistic-regression}
+
+\begin{itemize}
+\tightlist
+\item
+  We're going to have one response variable and two predictor variables
+  (one which is yes or no, the other which is continuous).
+\end{itemize}
+
+\subsubsection{QUESTION: What are you imagining your response variable
+to be? What are your two predictor
+variables?}\label{question-what-are-you-imagining-your-response-variable-to-be-what-are-your-two-predictor-variables}
+
+\begin{itemize}
+\tightlist
+\item
+  I am imagining a forced choice task (the most common psychophysics
+  experiment methodology), where someone is trying to discern if the
+  first stimuli or second stimuli is faster
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{N}\OtherTok{=}\DecValTok{50}
+\NormalTok{predictor\_cont}\OtherTok{\textless{}{-}}\FunctionTok{rnorm}\NormalTok{(N,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{) }
+\NormalTok{predictor\_binary}\OtherTok{\textless{}{-}}\FunctionTok{rbinom}\NormalTok{(N,}\DecValTok{1}\NormalTok{,}\FloatTok{0.5}\NormalTok{)}
+
+\NormalTok{y}\OtherTok{\textless{}{-}}\FloatTok{1.44}\SpecialCharTok{*}\NormalTok{predictor\_cont}\FloatTok{+2.5}\SpecialCharTok{*}\NormalTok{predictor\_binary}\SpecialCharTok{+}\FunctionTok{rnorm}\NormalTok{(N, }\DecValTok{0}\NormalTok{, }\FloatTok{0.01}\NormalTok{) }\DocumentationTok{\#\#\# Remember that to make this do{-}able in a linear framework, like this, we\textquotesingle{}re assuming this is on a log scale!}
+\FunctionTok{exp}\NormalTok{(}\FloatTok{1.44}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.220696
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# We\textquotesingle{}re now going to draw a probability distribution from y, assuming that y is on a logit scale}
+\NormalTok{y\_prob}\OtherTok{\textless{}{-}}\FunctionTok{plogis}\NormalTok{(y)}
+\NormalTok{y\_prob}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 0.9361851 0.4447988 0.9077170 0.9156369 0.5300006 0.9601382 0.9301595
+##  [8] 0.9209965 0.4115574 0.4670027 0.9576549 0.5726340 0.5911679 0.9050395
+## [15] 0.6061396 0.4929844 0.9512239 0.9399453 0.9135179 0.5844857 0.9285752
+## [22] 0.4716276 0.9277922 0.9112657 0.9201761 0.9244035 0.9014550 0.9319437
+## [29] 0.9545097 0.9230436 0.8748143 0.9350051 0.4988888 0.9394185 0.9246119
+## [36] 0.9456843 0.8888830 0.4271696 0.4919594 0.4641607 0.4441182 0.9299550
+## [43] 0.4755121 0.5174129 0.9111857 0.4731764 0.5488908 0.5542386 0.5189696
+## [50] 0.9161765
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# we can now draw from the probability distribution (so that all of our responses are 0,1)}
+
+\NormalTok{y\_dummy }\OtherTok{=} \FunctionTok{rbinom}\NormalTok{(}\AttributeTok{n =}\NormalTok{ N, }\AttributeTok{size =} \DecValTok{1}\NormalTok{, }\AttributeTok{prob =}\NormalTok{ y\_prob)}
+
+
+\NormalTok{data}\OtherTok{\textless{}{-}}\FunctionTok{cbind.data.frame}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{N, y\_prob, y, predictor\_cont, predictor\_binary)}
+
+\NormalTok{log\_reg\_model}\OtherTok{\textless{}{-}}\FunctionTok{glm}\NormalTok{(y\_dummy}\SpecialCharTok{\textasciitilde{}}\NormalTok{predictor\_binary}\SpecialCharTok{+}\NormalTok{predictor\_cont, }\AttributeTok{data=}\NormalTok{data, }\AttributeTok{family=}\StringTok{\textquotesingle{}binomial\textquotesingle{}}\NormalTok{)}
+
+\DocumentationTok{\#\#\# if you have loaded and installed lmerTest, it will give you p{-}values in your summary, if not, it won\textquotesingle{}t}
+\FunctionTok{summary}\NormalTok{(log\_reg\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = y_dummy ~ predictor_binary + predictor_cont, family = "binomial", 
+##     data = data)
+## 
+## Coefficients:
+##                  Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)       -0.8107     0.4957  -1.636  0.10192    
+## predictor_binary   2.7556     0.7879   3.497  0.00047 ***
+## predictor_cont     4.5368     2.3939   1.895  0.05807 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 65.342  on 49  degrees of freedom
+## Residual deviance: 45.870  on 47  degrees of freedom
+## AIC: 51.87
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# From here, you need to back transform to get the estimates on the y scale, instead of the log(y) scale}
+
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{coef}\NormalTok{(log\_reg\_model)) }\DocumentationTok{\#\#\# these are on the \textquotesingle{}regular\textquotesingle{} scale, not the log scale}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      (Intercept) predictor_binary   predictor_cont 
+##        0.4445484       15.7306221       93.3871113
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{confint}\NormalTok{(log\_reg\_model))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Waiting for profiling to be done...
+\end{verbatim}
+
+\begin{verbatim}
+##                      2.5 %       97.5 %
+## (Intercept)      0.1552688     1.125403
+## predictor_binary 3.7862528    88.534766
+## predictor_cont   1.1672441 16167.278908
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pR2}\NormalTok{(log\_reg\_model) }\DocumentationTok{\#\#\# r2CU (Nagelkerke R2 is the most comparable to our typical R2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fitting null model for pseudo-r2
+\end{verbatim}
+
+\begin{verbatim}
+##         llh     llhNull          G2    McFadden        r2ML        r2CU 
+## -22.9347701 -32.6709097  19.4722793   0.2980064   0.3225677   0.4422825
+\end{verbatim}
+
+\#\#\#Question, tell me about the distribution of y\_prob?! - It would
+be a distribution between 0-1 and mostly focus on 1, because my
+predictor\_cont has a low SD
+
+\subsubsection{Question: What did you expect the effect sizes of the
+predictors to be, based on what you simulated (hint, you will need to
+transform from line
+25)?}\label{question-what-did-you-expect-the-effect-sizes-of-the-predictors-to-be-based-on-what-you-simulated-hint-you-will-need-to-transform-from-line-25}
+
+\begin{itemize}
+\tightlist
+\item
+  The effect sizes would be 1.44 and 2.5, but they wont be those exact
+  values as a tiny bit of noise was added
+\end{itemize}
+
+\subsubsection{Question: The coefficient for predictor\_cont is 1.44
+This means that the expected log OR for a one-unit increase in
+predictor\_cont is 1.44. This means that the OR (biological scale) for a
+one unit increase in predictor\_cont is 4.220696. The R2 for this model
+is 0.2516362. This means that 25.1\% of the variance can be explained by
+the
+model.}\label{question-the-coefficient-for-predictor_cont-is-1.44-this-means-that-the-expected-log-or-for-a-one-unit-increase-in-predictor_cont-is-1.44.-this-means-that-the-or-biological-scale-for-a-one-unit-increase-in-predictor_cont-is-4.220696.-the-r2-for-this-model-is-0.2516362.-this-means-that-25.1-of-the-variance-can-be-explained-by-the-model.}
+
+Let's simulate some Poisson data!
+
+\subsection{Poisson Regression}\label{poisson-regression}
+
+This is mostly borrowed from
+\href{https://aosmith.rbind.io/2018/07/18/simulate-poisson-edition/}{Simulate
+Simulate Simulate 3!}
+
+\subsubsection{Question: What is your imagined response variable here?
+What is your imagined
+predictor?}\label{question-what-is-your-imagined-response-variable-here-what-is-your-imagined-predictor}
+
+\begin{itemize}
+\tightlist
+\item
+  Count of correct responses in the stimuli presented to a participant
+  \#\#\# Question: What happens if you add more than one predictor
+  (i.e.~x2)?
+\item
+  Then I am modelling 2 different effects on one outcome, as opposed to
+  one
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x1 }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1000}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.2}\NormalTok{) }\DocumentationTok{\#\#\# here there is one predictor, this a good place to imagine some biology}
+
+\DocumentationTok{\#\#\# Question, }
+
+\NormalTok{lambda }\OtherTok{=} \FunctionTok{exp}\NormalTok{(}\FloatTok{0.5} \SpecialCharTok{+} \FloatTok{2.5}\SpecialCharTok{*}\NormalTok{x1) }\DocumentationTok{\#\#\# this is where I change the effect sizes for each predictor}
+\FunctionTok{exp}\NormalTok{(}\FloatTok{2.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 12.18249
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#remember that this means that log(lambda) is a linear model!!}
+\DocumentationTok{\#\#\# here I\textquotesingle{}m simulating three betas against my three predictor variables to make my lambda}
+\DocumentationTok{\#\#\# The step above simulates the mean of each value of the response variable. lambda values are continuous, not discrete counts.}
+\DocumentationTok{\#\# λ is the unobserved true mean of the Poisson distribution for the t{-}th observation}
+
+\FunctionTok{head}\NormalTok{(lambda)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 23.77804 19.03030 23.78728 30.11618 21.10219 15.69901
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y }\OtherTok{=} \FunctionTok{rpois}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{lambda =}\NormalTok{ lambda) }\DocumentationTok{\#\#\# error is added in this step, remembering that the mean and the variance are the same!}
+\DocumentationTok{\#\#\# remember that y is count data!}
+\FunctionTok{head}\NormalTok{(y)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31 28 15 29 21 20
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(x1, }\FunctionTok{log}\NormalTok{(y)) }\DocumentationTok{\#\#\# note the residuals {-} are they normally distributed? Is that okay?}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lecture5logisticpossionandbinomial_files/figure-latex/Poisson Regression-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(x1,y)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lecture5logisticpossionandbinomial_files/figure-latex/Poisson Regression-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_poisson}\OtherTok{\textless{}{-}}\FunctionTok{cbind.data.frame}\NormalTok{(y, x1)}
+
+\NormalTok{poisson\_model}\OtherTok{\textless{}{-}}\FunctionTok{glm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x1, }\AttributeTok{family=}\StringTok{"poisson"}\NormalTok{, }\AttributeTok{data=}\NormalTok{data\_poisson)}
+\FunctionTok{summary}\NormalTok{(poisson\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = y ~ x1, family = "poisson", data = data_poisson)
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  0.54643    0.03662   14.92   <2e-16 ***
+## x1           2.47269    0.03284   75.30   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 6651.20  on 999  degrees of freedom
+## Residual deviance:  990.07  on 998  degrees of freedom
+## AIC: 5827.3
+## 
+## Number of Fisher Scoring iterations: 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\#back transform the coefficients }
+
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{coef}\NormalTok{(poisson\_model)) }\DocumentationTok{\#\#\# these are on the \textquotesingle{}regular\textquotesingle{} scale, not the log scale}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## (Intercept)          x1 
+##    1.727073   11.854302
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{confint}\NormalTok{(poisson\_model))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Waiting for profiling to be done...
+\end{verbatim}
+
+\begin{verbatim}
+##                 2.5 %    97.5 %
+## (Intercept)  1.607345  1.855427
+## x1          11.115341 12.642318
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pR2}\NormalTok{(poisson\_model) }\DocumentationTok{\#\#\# r2CU (Nagelkerke R2 is the most comparable to our typical R2) }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fitting null model for pseudo-r2
+\end{verbatim}
+
+\begin{verbatim}
+##           llh       llhNull            G2      McFadden          r2ML 
+## -2911.6616946 -5742.2239531  5661.1245170     0.4929383     0.9965214 
+##          r2CU 
+##     0.9965317
+\end{verbatim}
+
+\subsubsection{Question: The coefficient for x1 is 2.5 (FILL ME IN!)
+This means that the expected log count for a one-unit increase in x1 is
+2.5. This means that the count difference (biological scale) for a one
+unit increase in x1 is 12.18249. The R2 for this model is 0.9956404.
+This means that the model explains 99.56\% of the
+variation.}\label{question-the-coefficient-for-x1-is-2.5-fill-me-in-this-means-that-the-expected-log-count-for-a-one-unit-increase-in-x1-is-2.5.-this-means-that-the-count-difference-biological-scale-for-a-one-unit-increase-in-x1-is-12.18249.-the-r2-for-this-model-is-0.9956404.-this-means-that-the-model-explains-99.56-of-the-variation.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(MASS)}
+
+\NormalTok{neg\_binom\_predictor }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{1}\NormalTok{) }\DocumentationTok{\#\#\# what is your imagined predictor?}
+\CommentTok{\# {-} my imagined predictor would be arm length }
+
+\CommentTok{\# Log link function: log(mu) = beta0 + beta1 * X}
+\NormalTok{mu }\OtherTok{\textless{}{-}} \FunctionTok{exp}\NormalTok{(}\DecValTok{5}\FloatTok{+1.5} \SpecialCharTok{*}\NormalTok{ neg\_binom\_predictor) }\DocumentationTok{\#\#\# notice that this is ALSO on a log scale}
+\DocumentationTok{\#\#\# mu is the expected mean for each observation}
+\FunctionTok{exp}\NormalTok{(}\FloatTok{1.5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.481689
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Dispersion parameter for the negative binomial distribution}
+\NormalTok{theta }\OtherTok{\textless{}{-}} \DecValTok{2} \DocumentationTok{\#\#\# this makes the difference between negative binomial and poisson. A very large theta would lead the negative binomial to approximate a poisson}
+\DocumentationTok{\#\#Play around with theta and see what happens!}
+
+
+\NormalTok{y\_neg\_binom }\OtherTok{\textless{}{-}} \FunctionTok{rnegbin}\NormalTok{(}\DecValTok{1000}\NormalTok{, }\AttributeTok{mu =}\NormalTok{ mu, }\AttributeTok{theta =}\NormalTok{ theta)}
+
+\CommentTok{\# Create a data frame to store the simulated data}
+\NormalTok{data\_negbiom }\OtherTok{\textless{}{-}} \FunctionTok{cbind.data.frame}\NormalTok{(y\_neg\_binom, neg\_binom\_predictor)}
+
+\FunctionTok{plot}\NormalTok{(neg\_binom\_predictor, }\FunctionTok{log}\NormalTok{(y\_neg\_binom))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lecture5logisticpossionandbinomial_files/figure-latex/Negative Binomial Regression-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{plot}\NormalTok{(neg\_binom\_predictor, y\_neg\_binom)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lecture5logisticpossionandbinomial_files/figure-latex/Negative Binomial Regression-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{negative\_binomial\_model}\OtherTok{\textless{}{-}}\FunctionTok{glm.nb}\NormalTok{(y\_neg\_binom }\SpecialCharTok{\textasciitilde{}}\NormalTok{ neg\_binom\_predictor, }\AttributeTok{data=}\NormalTok{data\_negbiom)}
+\FunctionTok{summary}\NormalTok{(negative\_binomial\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm.nb(formula = y_neg_binom ~ neg_binom_predictor, data = data_negbiom, 
+##     init.theta = 1.991750656, link = log)
+## 
+## Coefficients:
+##                     Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)          4.99025    0.02292  217.71   <2e-16 ***
+## neg_binom_predictor  1.50738    0.02390   63.08   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for Negative Binomial(1.9918) family taken to be 1)
+## 
+##     Null deviance: 5464.9  on 999  degrees of freedom
+## Residual deviance: 1081.6  on 998  degrees of freedom
+## AIC: 11990
+## 
+## Number of Fisher Scoring iterations: 1
+## 
+## 
+##               Theta:  1.9918 
+##           Std. Err.:  0.0864 
+## 
+##  2 x log-likelihood:  -11984.2050
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{coef}\NormalTok{(negative\_binomial\_model)) }\DocumentationTok{\#\#\# these are on the \textquotesingle{}regular\textquotesingle{} scale, not the log scale}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         (Intercept) neg_binom_predictor 
+##           146.97258             4.51487
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{exp}\NormalTok{(}\FunctionTok{confint}\NormalTok{(negative\_binomial\_model))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Waiting for profiling to be done...
+\end{verbatim}
+
+\begin{verbatim}
+##                         2.5 %     97.5 %
+## (Intercept)         140.56180 153.772049
+## neg_binom_predictor   4.30517   4.736083
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pR2}\NormalTok{(negative\_binomial\_model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## fitting null model for pseudo-r2
+\end{verbatim}
+
+\begin{verbatim}
+##           llh       llhNull            G2      McFadden          r2ML 
+## -5992.1027207 -6926.1352994  1868.0651573     0.1348562     0.8455778 
+##          r2CU 
+##     0.8455787
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\#\# r2CU (Nagelkerke R2 is the most comparable to our typical R2)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{Question: The coefficient for neg\_binom\_predictor is
+1.5 (FILL ME IN!) This means that the expected log count for a one-unit
+increase in neg\_binom\_predictor is 1.5. This means that the count
+difference (biological scale) for a one unit increase in
+neg\_binom\_predictor is 4.481689. The R2 for this model is 0.8342348
+This means that 83.42\% of the model explains the variance seen in the
+data.}\label{question-the-coefficient-for-neg_binom_predictor-is-1.5-fill-me-in-this-means-that-the-expected-log-count-for-a-one-unit-increase-in-neg_binom_predictor-is-1.5.-this-means-that-the-count-difference-biological-scale-for-a-one-unit-increase-in-neg_binom_predictor-is-4.481689.-the-r2-for-this-model-is-0.8342348-this-means-that-83.42-of-the-model-explains-the-variance-seen-in-the-data.}
+
+\end{document}
