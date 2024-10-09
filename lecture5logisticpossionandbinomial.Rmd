@@ -1,0 +1,151 @@
+---
+title: "Lecture 5 Logistic, Poisson and Negative Binomial Regressions"
+author: "Eryn McFarlane"
+date: "`r Sys.Date()`"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(pscl)
+library(MASS)
+```
+
+We're going to simulate some predictor variables for each logistic regression, poisson regression and negative bionomial regression, and then analyze each. 
+
+## Logistic Regression
+
+We're going to have one response variable and two predictor variables (one which is yes or no, the other which is continuous).
+
+### QUESTION: What are you imagining your response variable to be? What are your two predictor variables?
+I am imagining a forced choice task (the most common psychophysics experiment methodology), where someone is trying to discern if the first stimuli or second stimuli is faster
+
+```{r logistic regression}
+N=50
+predictor_cont<-rnorm(N,5,0.2) 
+predictor_binary<-rbinom(N,1,0.5)
+
+y<-1.5*predictor_cont+2.5*predictor_binary+rnorm(N, 0, 0.01) ### Remember that to make this do-able in a linear framework, like this, we're assuming this is on a log scale!
+
+### We're now going to draw a probability distribution from y, assuming that y is on a logit scale
+
+y_prob<-plogis(y)
+y_prob
+
+###Question, tell me about the distribution of y_prob?!
+
+
+### we can now draw from the probability distribution (so that all of our responses are 0,1)
+
+y_dummy = rbinom(n = N, size = 1, prob = y_prob)
+
+
+data<-cbind.data.frame(1:N, y_prob, y, predictor_cont, predictor_binary)
+
+log_reg_model<-glm(y_dummy~predictor_binary+predictor_cont, data=data, family='binomial')
+
+### if you have loaded and installed lmerTest, it will give you p-values in your summary, if not, it won't
+summary(log_reg_model)
+
+### From here, you need to back transform to get the estimates on the y scale, instead of the log(y) scale
+
+exp(coef(log_reg_model)) ### these are on the 'regular' scale, not the log scale
+exp(confint(log_reg_model))
+pR2(log_reg_model) ### r2CU (Nagelkerke R2 is the most comparable to our typical R2)
+
+
+
+```
+
+### Question: What did you expect the effect sizes of the predictors to be, based on what you simulated (hint, you will need to transform from line 25)?
+
+### Question: The coefficient for predictor_cont is XX (FILL ME IN!) This means that the expected log OR for a one-unit increase in predictor_cont is XX. This means that the OR (biological scale) for a one unit increase in predictor_cont is XX. The R2 for this model is XX. This means that XXXX. 
+
+Let's simulate some Poisson data!
+
+## Poisson Regression
+
+This is mostly borrowed from [Simulate Simulate Simulate 3!](https://aosmith.rbind.io/2018/07/18/simulate-poisson-edition/)
+
+### Question: What is your imagined response variable here? What is your imagined predictor?
+### Question: What happens if you add more than one predictor (i.e. x2)?
+
+```{r Poisson Regression}
+
+x1 = rnorm(1000,1,0.1) ### here there is one predictors, this a good place to imagine some biology
+summary(x1)
+
+### Question, 
+
+lambda = exp(0.5 + 2.5*x1) ### this is where I change the effect sizes for each predictor
+
+###remember that this means that log(lambda) is a linear model!!
+### here I'm simulating three betas against my three predictor variables to make my lambda
+### The step above simulates the mean of each value of the response variable. lambda values are continuous, not discrete counts.
+## λ is the unobserved true mean of the Poisson distribution for the t-th observation
+
+head(lambda)
+
+y = rpois(1000, lambda = lambda) ### error is added in this step, remembering that the mean and the variance are the same!
+### remember that y is count data!
+head(y)
+
+plot(x1, log(y)) ### note the residuals - are they normally distributed? Is that okay?
+plot(x1,y)
+
+data_poisson<-cbind.data.frame(y, x1)
+
+poisson_model<-glm(y ~ x1, family="poisson", data=data_poisson)
+summary(poisson_model)
+
+###back transform the coefficients 
+
+exp(coef(poisson_model)) ### these are on the 'regular' scale, not the log scale
+exp(confint(poisson_model))
+pR2(poisson_model) ### r2CU (Nagelkerke R2 is the most comparable to our typical R2) 
+
+```
+
+### Question: The coefficient for x1 is XX (FILL ME IN!) This means that the expected log count for a one-unit increase in x1 is XX. This means that the count difference (biological scale) for a one unit increase in x1 is XX. The R2 for this model is XX. This means that XXXX. 
+
+
+
+```{r Negative Binomial Regression}
+library(MASS)
+
+neg_binom_predictor <- rnorm(1000, mean = 0, sd = 1) ### what is your imagined predictor?
+
+
+# Log link function: log(mu) = beta0 + beta1 * X
+
+
+mu <- exp(5+1.5 * neg_binom_predictor) ### notice that this is ALSO on a log scale
+### mu is the expected mean for each observation
+
+# Dispersion parameter for the negative binomial distribution
+theta <- 2 ### this makes the difference between negative binomial and poisson. A very large theta would lead the negative binomial to approximate a poisson
+##Play around with theta and see what happens!
+
+
+y_neg_binom <- rnegbin(1000, mu = mu, theta = theta)
+
+# Create a data frame to store the simulated data
+data_negbiom <- cbind.data.frame(y_neg_binom, neg_binom_predictor)
+
+plot(neg_binom_predictor, log(y_neg_binom))
+plot(neg_binom_predictor, y_neg_binom)
+
+
+
+
+negative_binomial_model<-glm.nb(y_neg_binom ~ neg_binom_predictor, data=data_negbiom)
+summary(negative_binomial_model)
+
+exp(coef(negative_binomial_model)) ### these are on the 'regular' scale, not the log scale
+exp(confint(negative_binomial_model))
+pR2(negative_binomial_model)
+
+### r2CU (Nagelkerke R2 is the most comparable to our typical R2)
+```
+
+### Question: The coefficient for neg_binom_predictor is XX (FILL ME IN!) This means that the expected log count for a one-unit increase in neg_binom_predictor is XX. This means that the count difference (biological scale) for a one unit increase in neg_binom_predictor is XX. The R2 for this model is XX. This means that XXXX. 
