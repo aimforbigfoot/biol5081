@@ -1,0 +1,110 @@
+---
+title: "Lecture 6 - Mixed effects models"
+author: "Ahmed Nadeem"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#install.packages("ggplot2")
+#install.packages("lme4")
+#install.packages("lmerTest")
+#install.packages("MuMIn")
+library(ggplot2)
+library(lme4)
+library(lmerTest)
+library(MuMIn)
+```
+
+## Simulate some predictor variables
+
+We're going to simulate three predictor variables and one random effect (nesting variable).
+The three predictor variables are all going to affect our response variable. The random effect is just going to mess with this a bit
+
+This nesting variable is going to 1) change the intercept for individuals within that group, and 2) change the error depending on who's in that group
+
+```{r simulation}
+a<-rnorm(n = 50, mean = 30, sd =2) ### change these numbers, change these terms to something meaningful!
+b<-rnorm(50, 20, 4)
+c<-rnorm(50, 40, 4)   ## i changed the numbers to be more in line with what id expect with my perception data, large mean values (cuz we're measuring distances and large SDs)
+
+g<-sample(1:3, 1000, replace=TRUE) 
+intercept<-ifelse(g==1, 2, ifelse(g==2, -2, 0))
+error<-ifelse(g==1, 0.1, ifelse(g==2, 0.5, 1.5))
+g<-as.factor(g)
+response<-intercept+0.9*a+0.2*b+0.1*c+rnorm(1000, mean=0, sd=error)
+data<-cbind.data.frame(response, a, b, c, g)
+```
+
+Let's look at the plots of the data, and then the data against (at least one) of the predictor variables. Feel free to plot separately against each predictor variable, or, plot partial residuals (remember Lecture 4)
+```{r plots, echo=TRUE} 
+
+hist(response) ### lovely and normally distributed
+
+ggplot(data, aes(y=response, x=a))+geom_point()+geom_smooth(method=lm)
+ggplot(data, aes(y=response, x=b))+geom_point()+geom_smooth(method=lm)
+ggplot(data, aes(y=response, x=c))+geom_point()+geom_smooth(method=lm)
+
+ggplot(data, aes(y=response, x=a, colour=g))+geom_point()+geom_smooth(method=lm)
+
+
+
+```
+
+``` {r redisual plots}
+model_grouped <- lm(response ~ a * g, data = data)  # Fit a model with group interaction
+data$residuals_grouped <- residuals(model_grouped)
+
+ggplot(data, aes(x = a, y = residuals_grouped, color = g)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Residuals vs Predictor 'a' by Group",
+       x = "Predictor 'a'",
+       y = "Residuals") +
+  theme_minimal()
+
+
+
+```
+
+
+QUESTION: Describe the difference between the two scatter plots. What does adding the different colour lines show you?
+ANSWER: The differnce between the two scatter plots is that the inital one, which I've made 3 copies of for the 3 different predictor variables, a, b, and c is that those only show that variable's effect on the response. Whereas the grouped colored plot shows the effect of the predictor variable per catergory. Showing me how does variablity influence my predictor's spread/closessness to the line
+
+QUESTION: Describe the residuals in both plots.
+ANSWER:The residuals in both plots are technically the same since they both look at predictor a, but in the group plot, it's clear that category 1 has lower residuals than b or c, because of the lower variablity from it's normal distribution
+
+Let's do some analyses on this to take a look at the differences. 
+```{r analysis, echo=FALSE}
+
+
+model1<-lm(response~a+b+c, data=data)
+summary(model1)
+anova(model1)
+
+model2<-lmer(response~a+b+c+(1|g), data=data)
+summary(model2)
+anova(model2)
+
+```
+
+```{r interpretation}
+## R2 for each model
+summary(model1)$adj.r.squared
+
+r.squaredGLMM(model2) ### this gives two R2, what are they both?
+
+##intercepts for each model
+ summary(model1)$coef[1,1]
+ ranef(model2)$g
+
+ ### coefficents for each model
+model1$coefficients
+ 
+summary(model2)$coefficients[, "Estimate"]
+ 
+```
+
+QUESTION: Compare and contrast the R2, intercepts and estimates from each model. Which is closer to what you simulated? Why is this?
+ANSWER: the mixed effects model is closer to what was simulated, the linear model does a good job (r2 = 0.44) but the linear mixed model with the conditional fixed and random effects is a lot better at modelling the data 
