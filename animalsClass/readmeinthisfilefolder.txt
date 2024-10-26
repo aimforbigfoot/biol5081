@@ -1,0 +1,1 @@
+ik this is for my stats grad class but im not risking anything and seeing my prof use github for versioning and control for a powerpoint is so cool. so i'm going to copy her here!
