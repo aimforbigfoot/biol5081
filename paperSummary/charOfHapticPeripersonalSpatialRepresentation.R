@@ -296,3 +296,4 @@ ggplot(summary_deviation, aes(x = interaction(hand, space), y = mean_deviationY,
     fill = "Handedness"
   ) +
   theme_minimal()
+

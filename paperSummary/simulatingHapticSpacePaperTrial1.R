@@ -39,6 +39,23 @@ mean_subject_y_right <- c(0,0,0,0,0,0,0,0)  # Adjusted means for right-handed Y-
 sd_subject_x_right <- c(0,0,0,0,0,0,0,0)  # Standard deviations for right-handed X-axis
 sd_subject_y_right <- c(0,0,0,0,0,0,0,0)  # Standard deviations for right-handed Y-axis
 
+
+# Randomized means and standard deviations for left-handed and right-handed positions
+
+# # Left-handed (other positions)
+# mean_subject_x_left <- c(-0.24, 1.63, -0.15, 2.05, -0.17, 1.48, -0.21, 1.33)
+# mean_subject_y_left <- c(-0.29, 1.72, -0.16, 2.01, -0.12, 1.54, -0.18, 1.89)
+# sd_subject_x_left <- c(0.23, 1.78, 0.18, 2.05, 0.21, 1.62, 0.24, 1.55)
+# sd_subject_y_left <- c(0.34, 1.88, 0.22, 2.08, 0.27, 1.71, 0.26, 1.81)
+# 
+# # Right-handed (other positions)
+# mean_subject_x_right <- c(0.26, 1.79, -0.21, 2.15, -0.18, 1.55, -0.28, 1.40)
+# mean_subject_y_right <- c(-0.31, 1.74, -0.19, 1.99, -0.11, 1.63, -0.17, 1.97)
+# sd_subject_x_right <- c(0.28, 1.86, 0.21, 2.12, 0.24, 1.58, 0.29, 1.68)
+# sd_subject_y_right <- c(0.36, 1.96, 0.25, 2.18, 0.31, 1.76, 0.27, 1.87)
+
+
+
 # mean_subject_x_left <- c(-0.21, 1.59, -0.18, 2.04, -0.18, 1.43, -0.24, 1.29)  # Adjusted means for left-handed X-axis (other positions)
 # mean_subject_y_left <- c(-0.31, 1.67, -0.19, 1.94, -0.14, 1.57, -0.13, 1.91)  # Adjusted means for left-handed Y-axis (other positions)
 # sd_subject_x_left <- c(0.2, 1.8, 0.19, 2.0, 0.2, 1.5, 0.25, 1.6)  # Standard deviations for left-handed X-axis
