@@ -35,27 +35,14 @@
   
   right_handed_means <- list(
     front = data.frame(
-      x = c( rep(0, 4), rep(0, 4)),
-      y = c( rep(0, 4 ), rep(0, 4))
+      x = c( rep(1.92, 4), rep(1.36, 4)),
+      y = c( rep(1.91, 4 ), rep(1.29, 4))
     ),
     right = data.frame(
-      x = c(rep(0 , 4), rep(0 , 4)),
-      y = c(rep(0 , 4), rep(0 , 4))
+      x = c(rep(2.04 , 4), rep(1.92 , 4)),
+      y = c(rep(1.94 , 4), rep(1.57 , 4))
     )
   )
-  # Calculating mean adjustments for right-handed participants
-  # right_handed_means <- list(
-  #   front = data.frame(
-  #     x = c( rep(1.29, 4), rep(1.36, 4)),
-  #     y = c( rep(1.57, 4 ), rep(1.43, 4))
-  #   ),
-  #   right = data.frame(
-  #     x = c(rep(1.92 , 4), rep(2.04 , 4)),
-  #     y = c(rep(1.91 , 4), rep(1.94 , 4))
-  #   )
-  # )
-  # right_handed_means$front generated
-  
   right_handed_sds <- list(
     front = data.frame(
       x = c(rep(0.19 * sqrt(N)   , 4), rep(0.18* sqrt(N) , 4)),
@@ -113,11 +100,14 @@
   
   
   
+  # Function to randomly sample an angle from a given range
+  sample_angle <- function(bin) {
+    range <- angle_bins[[bin]]
+    runif(1, min = range[1], max = range[2])  # Random value within the bin range
+  }
   
   
-  
-  
-  
+
   # Initialize an empty data frame to accumulate rows
   my_data <- data.frame(
     ID = integer(),
@@ -129,44 +119,52 @@
     space = character()
   )
   
-  # Set number of repetitions for each spatial position
-  reps_front <- 2  # Number of repetitions for front space
-  reps_side <- 3   # Number of repetitions for side spaces
-  numOfPoints <- nrow(base_points)
+  # Define angular bin ranges
+  angle_bins <- list(
+    "0-90°" = c(0, 90),
+    "90-180°" = c(90, 180),
+    "180-270°" = c(180, 270),
+    "270-360°" = c(270, 360)
+  )
+  # Function to apply rotation transformation to (x, y) based on angle in degrees
+  rotate_point <- function(x, y, angle) {
+    theta <- angle * (pi / 180)  # Convert degrees to radians
+    x_new <- x * cos(theta) - y * sin(theta)
+    y_new <- x * sin(theta) + y * cos(theta)
+    return(c(x_new, y_new))
+  }
   
-  # Loop over participants
+  # Data generation loop with rotation transformation
   for (i in participantCount) {
     current_hand <- participant_tags$hand[i]
-    # cat("Processing participant ID:", i, "Handedness:", current_hand, "\n")
-    
-    # Select the appropriate mean and sd adjustments based on handedness
     if (current_hand == "right-handed") {
       means <- right_handed_means
       sds <- right_handed_sds
       side_space <- "right"
-      side_offset <- 45  # Offset for right space
+      side_offset <- 45
+      angle_probs <- c(0.0, 0.0, 0.0, 1.0)
     } else {
       means <- left_handed_means
       sds <- left_handed_sds
       side_space <- "left"
-      side_offset <- -45  # Offset for left space
+      side_offset <- -45
+      angle_probs <- c(0.1, 0.0, 0.7, 0.2)
     }
     
-    # Loop over reference points
     for (j in 1:numOfPoints) {
-      # cat("  Processing reference point index:", j, "\n")
-      
-      # Front space repetitions
       for (k in 1:reps_front) {
-        # cat("    Adding front space repetition:", k, "\n")
+        angle_bin <- sample(names(angle_bins), 1, prob = c(0.00, 0.00, 1.00, 0.00))
+        angle_value <- sample_angle(angle_bin)
+        
         # Generate random adjustments
-        deltaX <- means$front$x[j] + rnorm(1, 0 , sd = sds$front$x[j])
-        deltaY <- means$front$y[j] + rnorm(1, 0 , sd = sds$front$y[j])
-        # deltaX <- rnorm(1, mean = means$front$x[j], sd = sds$front$x[j])
-        # deltaY <- rnorm(1, mean = means$front$y[j], sd = sds$front$y[j])
-        # Add base reference points
-        subjectX <- base_points$ref_x[j] + deltaX
-        subjectY <- base_points$ref_y[j] + deltaY
+        deltaX <- means$front$x[j] + rnorm(1, 0, sds$front$x[j])
+        deltaY <- means$front$y[j] + rnorm(1, 0, sds$front$y[j])
+        
+        # Apply rotation to the (deltaX, deltaY)
+        rotated_coords <- rotate_point(deltaX, deltaY, angle_value)
+        
+        subjectX <- base_points$ref_x[j] + rotated_coords[1]
+        subjectY <- base_points$ref_y[j] + rotated_coords[2]
         
         rowToAdd <- data.frame(
           ID = i,
@@ -175,20 +173,25 @@
           ref_x = base_points$ref_x[j],
           ref_y = base_points$ref_y[j],
           hand = current_hand,
-          space = "front"
+          space = "front",
+          angle_bin = angle_bin,
+          angle_value = angle_value
         )
         my_data <- rbind(my_data, rowToAdd)
       }
       
-      # Side space repetitions
       for (k in 1:reps_side) {
-        # cat("    Adding", side_space, "space repetition:", k, "\n")
-        # Generate random adjustments
+        angle_bin <- sample(names(angle_bins), 1, prob = angle_probs)
+        angle_value <- sample_angle(angle_bin)
+        
         deltaX <- rnorm(1, mean = means[[side_space]]$x[j], sd = sds[[side_space]]$x[j])
         deltaY <- rnorm(1, mean = means[[side_space]]$y[j], sd = sds[[side_space]]$y[j])
-        # Add base reference points and side offset
-        subjectX <- base_points$ref_x[j] + side_offset - deltaX
-        subjectY <- base_points$ref_y[j] - deltaY
+        
+        # Apply rotation to the (deltaX, deltaY)
+        rotated_coords <- rotate_point(deltaX, deltaY, angle_value)
+        
+        subjectX <- base_points$ref_x[j] + side_offset + rotated_coords[1]
+        subjectY <- base_points$ref_y[j] + rotated_coords[2]
         
         rowToAdd <- data.frame(
           ID = i,
@@ -197,7 +200,9 @@
           ref_x = base_points$ref_x[j] + side_offset,
           ref_y = base_points$ref_y[j],
           hand = current_hand,
-          space = side_space
+          space = side_space,
+          angle_bin = angle_bin,
+          angle_value = angle_value
         )
         my_data <- rbind(my_data, rowToAdd)
       }
@@ -206,11 +211,15 @@
   
   
   # Display the final data frame
-  # print("Final data frame:")
-  # print(head(my_data))
+  print("Final data frame:")
+  print(head(my_data))
   
   # Write the final data frame to a CSV file
   # write.csv(my_data, file = "my_data.csv", row.names = FALSE)
+  
+  
+  
+  
   
   my_data_left <- my_data %>% filter(hand == "left-handed")
   my_data_right <- my_data %>% filter(hand == "right-handed")
@@ -284,51 +293,75 @@
   
   
   
-  # Load necessary libraries
-  # Calculate deviation from the reference point for each data point
-  my_data <- my_data %>%
-    mutate(
-      deviationX = abs(subjectX - ref_x),
-      deviationY = abs(subjectY - ref_y)
+  print(colnames(freq_data))
+  
+  
+  # Create the frequency data as a data frame
+  freq_data <- data.frame(
+    hand = c(rep("left-handed", 2), rep("right-handed", 2)),
+    space = c("left", "front", "right", "front"),
+    "0t90" = c(10, 17, 16, 23),
+    "90t180" = c(0, 16, 8, 17),
+    "180t270" = c(53, 20, 8, 14),
+    "270t360" = c(9, 19, 39, 18)
+  )
+  
+  # Print the frequency data
+  print(freq_data)
+  
+  library(tidyr)
+  # Convert the data to long format using the correct column names
+  freq_data_long <- freq_data %>%
+    pivot_longer(
+      cols = c(X0t90, X90t180, X180t270, X270t360),
+      names_to = "angle_bin",
+      values_to = "frequency"
     )
   
-  # Calculate the mean deviation for each group (hand, space) for both X and Y axes
-  summary_deviation <- my_data %>%
-    group_by(hand, space) %>%
-    summarize(
-      mean_deviationX = mean(deviationX, na.rm = TRUE),
-      mean_deviationY = mean(deviationY, na.rm = TRUE),
-      sd_deviationX = sd(deviationX, na.rm = TRUE),
-      sd_deviationY = sd(deviationY, na.rm = TRUE)
-    )
+  # Print the result to verify
+  print(freq_data_long)
   
-  # Display the summary data
-  print(summary_deviation)
-  # 
-  # 
-  # # Create a bar plot with error bars for mean deviations
-  # ggplot(summary_deviation, aes(x = interaction(hand, space), y = mean_deviationX, fill = hand)) +
-  #   geom_bar(stat = "identity", position = "dodge", width = 0.6) +
-  #   geom_errorbar(aes(ymin = mean_deviationX - sd_deviationX, ymax = mean_deviationX + sd_deviationX),
-  #                 width = 0.2, position = position_dodge(0.6)) +
-  #   labs(
-  #     x = "Handedness and Space",
-  #     y = "Mean Deviati on (X Axis)",
-  #     title = "Mean Deviation from Reference Point for X Axis",
-  #     fill = "Handedness"
-  #   ) +
-  #   theme_minimal()
-  # 
-  # # If you also want to plot for the Y axis deviations
-  # ggplot(summary_deviation, aes(x = interaction(hand, space), y = mean_deviationY, fill = hand)) +
-  #   geom_bar(stat = "identity", position = "dodge", width = 0.6) +
-  #   geom_errorbar(aes(ymin = mean_deviationY - sd_deviationY, ymax = mean_deviationY + sd_deviationY),
-  #                 width = 0.2, position = position_dodge(0.6)) +
-  #   labs(
-  #     x = "Handedness and Space",
-  #     y = "Mean Deviation (Y Axis)",
-  #     title = "Mean Deviation from Reference Point for Y Axis",
-  #     fill = "Handedness"
-  #   ) +
-  #   theme_minimal()
-  # 
+  
+  
+  
+  # Create the frequency data as a data frame
+  freq_data <- data.frame(
+    hand = c(rep("left-handed", 2), rep("right-handed", 2)),
+    space = c("left", "front", "right", "front"),
+    X0t90 = c(10, 17, 16, 23),
+    X90t180 = c(0, 16, 8, 17),
+    X180t270 = c(53, 20, 8, 14),
+    X270t360 = c(9, 19, 39, 18)
+  )
+  
+  # Compute the total counts for each row
+  total_counts <- rowSums(freq_data[, 3:6])
+  
+  # Normalize the frequency data
+  normalized_data <- freq_data
+  normalized_data[, 3:6] <- sweep(freq_data[, 3:6], 1, total_counts, FUN = "/")
+  
+  # Extract each row into separate variables
+  row1 <- normalized_data[1, 3:6]  # Left-handed, Left space
+  row2 <- normalized_data[2, 3:6]  # Left-handed, Front space
+  row3 <- normalized_data[3, 3:6]  # Right-handed, Right space
+  row4 <- normalized_data[4, 3:6]  # Right-handed, Front space
+  
+  # Print the variables to verify
+  print(row1)
+  print(row2)
+  print(row3)
+  print(row4)
+  
+  # Extract row values as numeric vectors
+  row1_values <- as.numeric(normalized_data[1, 3:6])  # Left-handed, Left space
+  row2_values <- as.numeric(normalized_data[2, 3:6])  # Left-handed, Front space
+  row3_values <- as.numeric(normalized_data[3, 3:6])  # Right-handed, Right space
+  row4_values <- as.numeric(normalized_data[4, 3:6])  # Right-handed, Front space
+  
+  # Print the row values to verify (without column names)
+  print(row1_values)
+  print(row2_values)
+  print(row3_values)
+  print(row4_values)
+  
