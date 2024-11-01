@@ -1,3 +1,9 @@
+
+# ------------------------------------------------------
+# ----------------- Data generation  -------------------
+# ------------------------------------------------------
+
+
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
@@ -6,7 +12,7 @@ library(tidyr)  # for pivot_longer()
 set.seed(123)  # Set seed for reproducibility
 
 # Participant IDs and their handedness
-participantCount <- 1:10
+participantCount <- 1:20
 participant_tags <- data.frame(
   ID = participantCount
 )
@@ -19,7 +25,7 @@ base_points <- data.frame(
 )
 
 # Set number of repetitions for each spatial position
-reps_points <- 3
+reps_points <- 5 
 numOfPoints <- length(base_points$ref_x)
 
 # Sample size
@@ -84,7 +90,9 @@ for (i in participantCount) {
       
       # Assign a quadrant based on predefined frequencies
       quadrant <- sample(c(1, 2, 3, 4), 1, prob = normalizedFreqShoulder)
+      quadrant
       angle <- runif(1, (quadrant - 1) * 90, quadrant * 90)
+      angle
       rotated_coords <- rotate_point(deltaX, deltaY, angle)
       
       subjectX <- base_points$ref_x[j] + rotated_coords[1]
@@ -135,12 +143,115 @@ for (i in participantCount) {
   }
 }
 
+
+# Scatter plot of subject positions with reference points
+ggplot(my_data, aes(x = subjectX, y = subjectY, color = space, shape = arrangement)) +
+  geom_point(alpha = 0.6, size = 3) +  # Points for each data point
+  geom_point(aes(x = ref_x, y = ref_y), color = "black", shape = 4, size = 3) +  # Reference points
+  facet_wrap(~ space) +  # Facet by arrangement type if desired - THIS LINE IS COOL IF U REMOVE OR ADD IT
+  labs(
+    title = "Scatter Plot of Subject Positions",
+    x = "X Position",
+    y = "Y Position"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+    axis.title = element_text(size = 12)
+  )
+
+
+
+# ------------------------------------------------------
+# ------------------- Data analysis --------------------
+# ------------------------------------------------------
+
+
+
 # Calculate deviations from the reference points
 my_data <- my_data %>%
   mutate(
-    deviationX = abs(subjectX - ref_x),
-    deviationY = abs(subjectY - ref_y)
+    deviationX = (subjectX - ref_x),
+    deviationY = (ref_y-subjectY)
   )
+
+
+
+# ------------------- Two way ANOVA --------------------
+
+# Two-way ANOVA for deviationX
+anova_x <- aov(deviationX ~ space * arrangement, data = my_data)
+summary(anova_x)
+
+# Two-way ANOVA for deviationY
+anova_y <- aov(deviationY ~ space * arrangement, data = my_data)
+summary(anova_y)
+
+# -------------- Direction of Deviations ---------------
+
+
+
+# Calculate directional deviations with positive values as anti-clockwise for above shoulder height
+# Let's say positive deviation on X and Y separately represents anti-clockwise in your setup
+
+# Create a directional deviation based on X and Y, positive values are anti-clockwise deviations
+my_data <- my_data %>%
+  mutate(
+    directional_deviationX = if_else(space == "shoulderAbove", deviationX, -deviationX),
+    directional_deviationY = if_else(space == "shoulderAbove", deviationY, -deviationY)
+  )
+
+# Perform one-sample t-tests for each axis and reproduction space
+# 1. T-test for X-axis directional deviation in each space
+t_test_results_x <- my_data %>%
+  group_by(space) %>%
+  summarize(
+    t_test_p_value_x = t.test(directional_deviationX, mu = 0)$p.value,
+    t_test_statistic_x = t.test(directional_deviationX, mu = 0)$statistic,
+    mean_directional_deviationX = mean(directional_deviationX)
+  )
+
+# 2. T-test for Y-axis directional deviation in each space
+t_test_results_y <- my_data %>%
+  group_by(space) %>%
+  summarize(
+    t_test_p_value_y = t.test(directional_deviationY, mu = 0)$p.value,
+    t_test_statistic_y = t.test(directional_deviationY, mu = 0)$statistic,
+    mean_directional_deviationY = mean(directional_deviationY)
+  )
+
+# Display the results
+t_test_results_x
+t_test_results_y
+
+
+
+
+
+
+
+
+
+
+
+
+# ---- VIsualizing deviatiosn 
+# Summarize mean and standard error for deviations by space and arrangement
+summary_table <- my_data %>%
+  group_by(space, arrangement) %>%
+  summarize(
+    mean_deviationX = mean(deviationX),
+    absDeviationX = mean(abs(deviationX)),
+    se_deviationX = sd(deviationX) / sqrt(n()),
+    mean_deviationY = mean(deviationY),
+    absDeviationY = mean(abs(deviationY)),
+    se_deviationY = sd(deviationY) / sqrt(n())
+  ) %>%
+  # Optionally round values for readability
+  mutate(across(starts_with("mean"), round, 2),
+         across(starts_with("se"), round, 2))
+summary_table
+
 
 # Summarize deviations with SEs
 summary_se <- my_data %>%
@@ -228,13 +339,3 @@ ggplot(summary_se_long, aes(x = space, y = mean, fill = deviation)) +
 
 
 
-
-
-
-# Two-way ANOVA for deviationX
-anova_x <- aov(deviationX ~ space * arrangement, data = my_data)
-summary(anova_x)
-
-# Two-way ANOVA for deviationY
-anova_y <- aov(deviationY ~ space * arrangement, data = my_data)
-summary(anova_y)
