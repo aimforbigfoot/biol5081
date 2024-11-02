@@ -1,4 +1,3 @@
-
 # ------------------------------------------------------
 # ----------------- Data generation  -------------------
 # ------------------------------------------------------
@@ -7,7 +6,7 @@
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
-library(tidyr)  # for pivot_longer()
+library(tidyr)
 
 set.seed(123)  # Set seed for reproducibility
 
@@ -64,6 +63,7 @@ my_data <- data.frame(
   subjectY = numeric(),
   ref_x = numeric(),
   ref_y = numeric(),
+  angle = numeric(),
   space = character(),
   quadrant = character(),
   arrangement = character()
@@ -92,7 +92,6 @@ for (i in participantCount) {
       quadrant <- sample(c(1, 2, 3, 4), 1, prob = normalizedFreqShoulder)
       quadrant
       angle <- runif(1, (quadrant - 1) * 90, quadrant * 90)
-      angle
       rotated_coords <- rotate_point(deltaX, deltaY, angle)
       
       subjectX <- base_points$ref_x[j] + rotated_coords[1]
@@ -106,6 +105,7 @@ for (i in participantCount) {
         subjectY = subjectY,
         ref_x = base_points$ref_x[j],
         ref_y = base_points$ref_y[j],
+        angle = angle,
         space = "shoulder",
         quadrant = quadrant_label,
         arrangement = arrangement_type
@@ -134,6 +134,7 @@ for (i in participantCount) {
         subjectY = subjectY,
         ref_x = base_points$ref_x[j],
         ref_y = base_points$ref_y[j] + 30,
+        angle = angle,
         space = "shoulderAbove",
         quadrant = quadrant_label,
         arrangement = arrangement_type
@@ -143,16 +144,18 @@ for (i in participantCount) {
   }
 }
 
-
-# Scatter plot of subject positions with reference points
 ggplot(my_data, aes(x = subjectX, y = subjectY, color = space, shape = arrangement)) +
   geom_point(alpha = 0.6, size = 3) +  # Points for each data point
   geom_point(aes(x = ref_x, y = ref_y), color = "black", shape = 4, size = 3) +  # Reference points
-  facet_wrap(~ space) +  # Facet by arrangement type if desired - THIS LINE IS COOL IF U REMOVE OR ADD IT
+  facet_wrap(~ space, labeller = as_labeller(c("shoulder" = "Shoulder Height", "shoulderAbove" = "Above Shoulder Height"))) +  # Custom facet labels
   labs(
     title = "Scatter Plot of Subject Positions",
-    x = "X Position",
-    y = "Y Position"
+    x = "Y Position (cm)",
+    y = "Z Position (cm)"
+  ) +
+  scale_color_manual(
+    values = c("shoulder" = "coral", "shoulderAbove" = "cyan3"),
+    labels = c("shoulder" = "Shoulder Height", "shoulderAbove" = "Above Shoulder Height")  # Custom legend labels
   ) +
   theme_minimal() +
   theme(
@@ -162,20 +165,39 @@ ggplot(my_data, aes(x = subjectX, y = subjectY, color = space, shape = arrangeme
 
 
 
+
 # ------------------------------------------------------
 # ------------------- Data analysis --------------------
 # ------------------------------------------------------
 
+# The authors labeled deviations with directional conventions (e.g., positive values as anti-clockwise
+# in the above-shoulder space) to describe spatial trends conceptually. While this might aid qualitative 
+# interpretation, it is statistically inappropriate for ANOVA or t-tests, which require absolute, 
+# unbiased measurements for comparing group means and variations.
 
+# For ANOVA, we need consistent numeric values that quantify deviation magnitude directly, 
+# without subjective directional labels. This ensures that ANOVA evaluates actual differences 
+# in spatial accuracy, and that t-tests assess deviations relative to zero without interference 
+# from arbitrary labels. Hence, the directional deviations here are calculated with appropriate
+# signs for conceptual interpretation but then converted to absolute values for statistical tests.
 
-# Calculate deviations from the reference points
+# View the first rows of the data for reference
+head(my_data)
+
+# Calculate raw deviations from the reference points
 my_data <- my_data %>%
   mutate(
     deviationX = (subjectX - ref_x),
-    deviationY = (ref_y-subjectY)
+    deviationY = (ref_y - subjectY)
   )
 
-
+# Calculate directional deviations based on space, with positive values as anti-clockwise for above shoulder height
+# This is for conceptual interpretation based on the setup, where positive deviations represent anti-clockwise rotations
+my_data <- my_data %>%
+  mutate(
+    directional_deviationX = if_else(space == "shoulderAbove", deviationX, -deviationX),
+    directional_deviationY = if_else(space == "shoulderAbove", deviationY, -deviationY)
+  )
 
 # ------------------- Two way ANOVA --------------------
 
@@ -187,19 +209,30 @@ summary(anova_x)
 anova_y <- aov(deviationY ~ space * arrangement, data = my_data)
 summary(anova_y)
 
-# -------------- Direction of Deviations ---------------
+
+# Post hoc test for space effect on deviationX
+tukey_space_x <- TukeyHSD(anova_x, "space")
+print("Post hoc test for space on deviationX")
+print(tukey_space_x)
+
+# Post hoc test for space effect on deviationY
+tukey_space_y <- TukeyHSD(anova_y, "space")
+print("Post hoc test for space on deviationY")
+print(tukey_space_y)
 
 
+# Post hoc test for arrangement effect on deviationX
+tukey_arrangement_x <- TukeyHSD(anova_x, "arrangement")
+print("Post hoc test for arrangement on deviationX")
+print(tukey_arrangement_x)
 
-# Calculate directional deviations with positive values as anti-clockwise for above shoulder height
-# Let's say positive deviation on X and Y separately represents anti-clockwise in your setup
+# Post hoc test for arrangement effect on deviationY
+tukey_arrangement_y <- TukeyHSD(anova_y, "arrangement")
+print("Post hoc test for arrangement on deviationY")
+print(tukey_arrangement_y)
 
-# Create a directional deviation based on X and Y, positive values are anti-clockwise deviations
-my_data <- my_data %>%
-  mutate(
-    directional_deviationX = if_else(space == "shoulderAbove", deviationX, -deviationX),
-    directional_deviationY = if_else(space == "shoulderAbove", deviationY, -deviationY)
-  )
+
+# -------------- T Test  ---------------
 
 # Perform one-sample t-tests for each axis and reproduction space
 # 1. T-test for X-axis directional deviation in each space
@@ -226,76 +259,55 @@ t_test_results_y
 
 
 
+# -------------- Quadurant Counts  ---------------
 
 
-
-
-
-
-
-
-
-# ---- VIsualizing deviatiosn 
-# Summarize mean and standard error for deviations by space and arrangement
-summary_table <- my_data %>%
-  group_by(space, arrangement) %>%
-  summarize(
-    mean_deviationX = mean(deviationX),
-    absDeviationX = mean(abs(deviationX)),
-    se_deviationX = sd(deviationX) / sqrt(n()),
-    mean_deviationY = mean(deviationY),
-    absDeviationY = mean(abs(deviationY)),
-    se_deviationY = sd(deviationY) / sqrt(n())
-  ) %>%
-  # Optionally round values for readability
-  mutate(across(starts_with("mean"), round, 2),
-         across(starts_with("se"), round, 2))
-summary_table
-
-
-# Summarize deviations with SEs
-summary_se <- my_data %>%
-  group_by(space, arrangement) %>%
-  summarize(
-    mean_deviationX = mean(deviationX),
-    se_deviationX = sd(deviationX) / sqrt(n()),
-    mean_deviationY = mean(deviationY),
-    se_deviationY = sd(deviationY) / sqrt(n())
+# Count the occurrences of each quadrant within each space
+quadrant_counts <- my_data %>%
+  group_by(space, quadrant) %>%
+  summarize(count = n()) %>%
+  ungroup() %>%
+  # Spread the data so that each quadrant is a separate column
+  pivot_wider(names_from = quadrant, values_from = count, values_fill = list(count = 0)) %>%
+  # Rename columns to match the format in your provided table
+  rename(
+    `0-90°` = `0-90`,
+    `90-180°` = `90-180`,
+    `180-270°` = `180-270`,
+    `270-360°` = `270-360`
   )
 
-# Reshape the data for ggplot
-summary_se_long <- summary_se %>%
-  pivot_longer(
-    cols = c(mean_deviationX, mean_deviationY, se_deviationX, se_deviationY),
-    names_to = c(".value", "deviation"),
-    names_sep = "_"
-  )
+# Display the table
+print(quadrant_counts)
+quadrant_counts
 
-# Plot mean deviations with error bars
-ggplot(summary_se_long, aes(x = space, y = mean, fill = deviation)) +
-  geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7) +
-  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
-                position = position_dodge(width = 0.9), width = 0.2) +
-  facet_wrap(~ arrangement) +
-  labs(
-    title = "Mean Deviations with Standard Errors",
-    x = "Space",
-    y = "Deviation",
-    fill = "Deviation Type"
-  ) +
-  theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    axis.title = element_text(size = 12)
-  )
+# Extract counts for each space
+shoulder_counts <- quadrant_counts %>%
+  filter(space == "shoulder") %>%
+  select(-space) %>%
+  unlist()
 
+above_shoulder_counts <- quadrant_counts %>%
+  filter(space == "shoulderAbove") %>%
+  select(-space) %>%
+  unlist()
+above_shoulder_counts
+# Perform chi-squared goodness-of-fit test for "shoulder" space
+# Null hypothesis: Counts are uniformly distributed across quadrants
+chi_square_test_shoulder <- chisq.test(shoulder_counts)
+print("Chi-Squared Test for Shoulder Space")
+print(chi_square_test_shoulder)
 
-
+# Perform chi-squared goodness-of-fit test for "above shoulder" space
+# Null hypothesis: Counts are uniformly distributed across quadrants
+chi_square_test_above_shoulder <- chisq.test(above_shoulder_counts)
+print("Chi-Squared Test for Above Shoulder Space")
+print(chi_square_test_above_shoulder)
 
 
 
 
-
+# -------------- Plotting directional deviations  ---------------
 
 
 # Summarize deviations with SEs
@@ -316,7 +328,6 @@ summary_se_long <- summary_se %>%
     names_sep = "_"
   )
 
-# Plot mean deviations with error bars without splitting by arrangement
 ggplot(summary_se_long, aes(x = space, y = mean, fill = deviation)) +
   geom_bar(stat = "identity", position = position_dodge(width = 0.9), width = 0.7) +
   geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
@@ -324,18 +335,14 @@ ggplot(summary_se_long, aes(x = space, y = mean, fill = deviation)) +
   labs(
     title = "Mean Deviations with Standard Errors",
     x = "Space",
-    y = "Deviation",
+    y = "Deviation (cm)",
     fill = "Deviation Type"
   ) +
+  scale_fill_manual(values = c("deviationX" = "coral", "deviationY" = "cyan3"),
+                    labels = c("deviationX" = "Y Axis", "deviationY" = "Z Axis")) +
+  scale_x_discrete(labels = c("shoulder" = "Shoulder Height", "shoulderAbove" = "Above Shoulder Height")) + # Custom x-axis labels
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
     axis.title = element_text(size = 12)
   )
-
-
-
-
-
-
-
