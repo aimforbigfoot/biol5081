@@ -165,5 +165,19 @@ ggplot(data) +
 
 
 
+library(pwr)
+
+# Example: power for repeated-measures ANOVA
+# Assume effect size f = 0.25, α = 0.05, 5 participants, 6 conditions
+b <- pwr.anova.test(k = 6, f = 0.8, sig.level = 0.05, power = 0.8)
+b
 
 
+
+library(simr)
+head(data)
+# Define a mixed model (e.g., offsets modeled by height scaling factor)
+model <- lmer(OffsetX ~ Height + (1|Person), data = data)
+
+# Perform a power simulation for the fixed effect (scalingFactor)
+powerSim(model, nsim = 100)  # Run 100 simulations
