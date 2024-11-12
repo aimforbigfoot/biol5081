@@ -18,7 +18,7 @@ triangleY <- 30
 circleY <- 15
 
 numOfRepsPerPoint <- 3  # Number of repetitions per point
-numOfPpl <- 20        # Total number of participants
+numOfPpl <- 67        # Total number of participants
 
 # Initialize an empty data frame to store the simulated data
 data <- data.frame(
@@ -289,30 +289,6 @@ ggplot(summary_data, aes(x = ExpType, y = MeanTotalDeviation, fill = ExpType)) +
        y = "Mean Total Deviation") +
   theme_minimal()
 
-# # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # #
-#------------- LINEAR MODELS FOR EACH EXPERIMENT TYPE ------
-# # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # #
-
-# Fit linear models to see if Total Deviation depends on Person for each experiment type
-models <- row_trends %>%
-  group_by(ExpType) %>%
-  summarise(
-    Model = list(lm(TotalDeviation ~ Person, data = cur_data())),
-    .groups = "drop"
-  )
-
-# Extract summaries of the models
-model_summaries <- models %>%
-  mutate(
-    R_squared = sapply(Model, function(x) summary(x)$r.squared),
-    Formula = sapply(Model, function(x) {
-      coef <- coef(x)
-      paste0("y = ", round(coef[1], 2), " + ", round(coef[2], 2), "x")
-    })
-  )
-
-# Print model summaries
-print(model_summaries)
 
 # # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # ## # #
 #------------- ANOVA AND TUKEY HSD ANALYSIS ----------------
