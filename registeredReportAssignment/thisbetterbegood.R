@@ -208,11 +208,11 @@ point_labels <- c(
 
 
 # Plot raw data with updated colors and legend labels
-raw_plot <- ggplot(df, aes(x = X, y = Y, color = movementCondition, shape = movementCondition)) +
+raw_plot <- ggplot(df, aes(x = X, y = Y, color = movementCondition)) +
   # Plot raw data with contrasting colors for movement conditions
   geom_point(size = 2, alpha = 0.6) +
   # Plot ego positions with movementCondition
-  geom_point(data = ego_positions_df, aes(x = X, y = Y, color = movementCondition, shape = movementCondition), size = 4) +
+  geom_point(data = ego_positions_df, aes(x = X, y = Y, color = movementCondition), size = 4) +
   # Plot measurement points with custom colors and labels
   geom_point(data = points_to_measure_df, aes(x = X, y = Y, color = PointName), size = 3, stroke = 3, shape = 4) +
   # Customize colors for raw data points and measurement points
