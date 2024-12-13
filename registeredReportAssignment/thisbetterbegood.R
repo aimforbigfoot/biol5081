@@ -11,7 +11,7 @@ library(tidyr)         # For reshaping data structures
 ## ---------------- Parameters ---------------
 set.seed(123)
 # Define experiment parameters
-numOfPeople <- 10      # Number of participants
+numOfPeople <- 67      # Number of participants
 numOfRepeats <- 4      # Number of repetitions for each point
 noise_sd <- 2.5        # Standard deviation for random noise added to the data
 
@@ -156,29 +156,76 @@ points_to_measure_df <- do.call(rbind, lapply(names(pointsToMeasure), function(n
     Y = pointsToMeasure[[name]][2] + 45
   )
 }))
-# Define descriptive labels for PointName
-point_labels <- c(
-  "tl" = "Top Left",
-  "tr" = "Top Right",
-  "bl" = "Bottom Left",
-  "br" = "Bottom Right"
+
+
+# Define custom colors for movement conditions and target positions
+movement_colors <- c(
+  "Initial" = "blue", 
+  "Opposite" = "red", 
+  "Adj CW" = "green", 
+  "Adj CCW" = "purple"
 )
 
-# Plot raw data with points and labels
+# Define custom colors for movement conditions and target positions
+movement_colors <- c(
+  "inital" = "blue", 
+  "opposite" = "red", 
+  "adj_cw" = "green", 
+  "adj_ccw" = "purple"
+)
+
+
+point_colors <- c(
+  "bl" = "firebrick", 
+  "tl" = "mediumorchid", 
+  "br" = "tomato4", 
+  "tr" = "darkblue"
+)
+
+# Define custom labels for the legend of measurement points
+point_labels <- c(
+  "bl" = "Bottom Left",
+  "tl" = "Top Left",
+  "br" = "Bottom Right",
+  "tr" = "Top Right"
+)
+
+
+# Define custom labels for movement conditions and target positions
+movement_labels <- c(
+  "inital" = "Initial", 
+  "opposite" = "Opposite", 
+  "adj_cw" = "Adj CW", 
+  "adj_ccw" = "Adj CCW"
+)
+
+point_labels <- c(
+  "bl" = "Bottom Left", 
+  "tl" = "Top Left", 
+  "br" = "Bottom Right", 
+  "tr" = "Top Right"
+)
+
+
+# Plot raw data with updated colors and legend labels
 raw_plot <- ggplot(df, aes(x = X, y = Y, color = movementCondition, shape = movementCondition)) +
-  # Plot raw data
+  # Plot raw data with contrasting colors for movement conditions
   geom_point(size = 2, alpha = 0.6) +
   # Plot ego positions with movementCondition
   geom_point(data = ego_positions_df, aes(x = X, y = Y, color = movementCondition, shape = movementCondition), size = 4) +
-  # Plot points to measure with color determined by PointName
+  # Plot measurement points with custom colors and labels
   geom_point(data = points_to_measure_df, aes(x = X, y = Y, color = PointName), size = 3, stroke = 3, shape = 4) +
-  # Customize labels
+  # Customize colors for raw data points and measurement points
+  scale_color_manual(
+    values = c(movement_colors, point_colors),  # Combine movement and point colors
+    name = "Legend",  # Unified legend title
+    labels = c(names(movement_colors), names(point_colors))  # Unified legend labels
+  ) +
   labs(
     title = "Raw Data with Ego Positions and Measurement Points",
     x = "X Coordinate",
     y = "Y Coordinate",
-    color = "Legend",
-    shape = "Ego Position"
+    shape = "Movement Condition"
   ) +
   # Map descriptive labels to PointName
   theme_minimal() +
@@ -186,6 +233,8 @@ raw_plot <- ggplot(df, aes(x = X, y = Y, color = movementCondition, shape = move
 
 # Display the plot
 print(raw_plot)
+
+
 
 # ---------------- Data reshapping for plotting the averaged data --------------
 
@@ -245,12 +294,12 @@ shape_mapping <- c("inital" = 16,   # Circle
 
 
 # Plot averaged data with error bars, lines, and separate graphs
-avg_plot <- ggplot(summary_data, aes(x = X_mean, y = Y_mean, color = movementCondition, shape = movementCondition)) +
+avg_plot <- ggplot(summary_data, aes(x = X_mean, y = Y_mean, color = movementCondition)) +
   geom_point(size = 4) +  # Averaged points
   geom_errorbar(aes(ymin = Y_mean - Y_sd, ymax = Y_mean + Y_sd), width = 1, size = 0.7) +  # Error bars (Y)
   geom_errorbarh(aes(xmin = X_mean - X_sd, xmax = X_mean + X_sd), height = 1, size = 0.7) +  # Error bars (X)
   geom_segment(aes(x = X_mean, y = Y_mean, xend = X_expected, yend = Y_expected), size = 0.8, linetype = "solid", color = "blue") +  # Line to expected position
-  geom_point(data = ego_positions_df, aes(x = X, y = Y), size = 5, color = "black", shape = 3 , color = movementCondition, shape = movementCondition) +  # Ego positions (crosses)
+  geom_point(data = ego_positions_df, aes(x = X, y = Y), size = 5, color = "black", shape = 3 , color = movementCondition) +  # Ego positions (crosses)
   geom_point(data = points_to_measure_df, aes(x = X, y = Y), size = 3, shape = 4, color = "red") +  # Measurement points (red crosses)
   scale_shape_manual(values = shape_mapping) +
   labs(
@@ -369,29 +418,39 @@ diff_plot <- ggplot(tukey_diff_plot, aes(x = diff, y = reorder(paste(Group1, "vs
 print(diff_plot)
 
 
+## -------------- Angular Analysis with Cardinal Reference -------------------
 
+# Define cardinal direction offsets (in degrees)
+cardinal_offsets <- c(
+  inital = 0,         # 0° at the top
+  opposite = 180,     # 0° at the bottom
+  adj_cw = 90,        # 0° at the right
+  adj_ccw = -90       # 0° at the left
+)
 
-## -------------- Angular Analysis -------------------
-# Add ego positions to df
+# Add ego positions and offsets to `df`
 df <- df %>%
   left_join(
     ego_positions_df %>%
       rename(Ego_X = X, Ego_Y = Y),  # Rename columns for clarity
     by = "movementCondition"
-  )
-df
-# Compute angular deviation for each data point
-df <- df %>%
-  mutate(
-    Angle_Actual = atan2(Y - Ego_Y, X - Ego_X),  # Angle of actual position (radians)
-    Angle_Expected = atan2(Y_expected - Ego_Y, X_expected - Ego_X),  # Angle of expected position (radians)
-    Angular_Deviation = (Angle_Actual - Angle_Expected) %% (2 * pi)  # Angular deviation (wrap to [0, 2π])
   ) %>%
   mutate(
-    Angular_Deviation = ifelse(Angular_Deviation > pi, Angular_Deviation - 2 * pi, Angular_Deviation)  # Wrap to [-π, π]
+    Cardinal_Offset = recode(movementCondition, !!!cardinal_offsets)  # Add cardinal offsets
   )
-
-
+df
+# Compute angular deviation based on adjusted cardinal reference
+df <- df %>%
+  mutate(
+    Angle_Actual = (atan2(Y - Ego_Y.y, X - Ego_X.x) * (180 / pi)),  # Convert to degrees
+    Angle_Expected = (atan2(Y_expected - Ego_Y.y, X_expected - Ego_X.x) * (180 / pi)),
+    Angle_Actual_Adjusted = (Angle_Actual - Cardinal_Offset) %% 360,  # Adjust based on cardinal direction
+    Angle_Expected_Adjusted = (Angle_Expected - Cardinal_Offset) %% 360,
+    Angular_Deviation = (Angle_Actual_Adjusted - Angle_Expected_Adjusted) %% 360  # Compute deviation
+  ) %>%
+  mutate(
+    Angular_Deviation = ifelse(Angular_Deviation > 180, Angular_Deviation - 360, Angular_Deviation)  # Wrap to [-180, 180]
+  )
 
 # Summarize mean and SD of angular deviations by PointName and movementCondition
 angular_summary <- df %>%
@@ -410,8 +469,6 @@ angular_summary <- angular_summary %>%
     labels = c("Initial", "Opposite", "Adj CW", "Adj CCW")  # Custom labels
   ))
 
-
-
 # Bar plot of angular deviation with facet_wrap
 angular_facet_plot <- ggplot(angular_summary, aes(x = movementCondition, y = Mean_Angular_Deviation, fill = movementCondition)) +
   geom_bar(stat = "identity", position = "dodge") +  # Bar heights represent mean angular deviations
@@ -425,7 +482,7 @@ angular_facet_plot <- ggplot(angular_summary, aes(x = movementCondition, y = Mea
   labs(
     title = "Angular Deviation to Expected Position by Movement Condition",
     x = "Movement Condition",
-    y = "Mean Angular Deviation (Radians ± SD)",
+    y = "Mean Angular Deviation (Degrees ± SD)",
     fill = "Movement Condition"
   ) +
   facet_wrap(~ PointName, ncol = 2) +  # Create separate panels for each PointName
@@ -436,9 +493,6 @@ angular_facet_plot <- ggplot(angular_summary, aes(x = movementCondition, y = Mea
   )
 
 print(angular_facet_plot)
-
-
-
 
 # Perform ANOVA on angular deviations
 angular_anova_result <- aov(Angular_Deviation ~ movementCondition, data = df)
@@ -461,15 +515,12 @@ angular_diff_plot <- ggplot(angular_tukey_df, aes(x = diff, y = reorder(paste(Gr
   scale_color_manual(values = c("Significant" = "red", "Not Significant" = "blue")) +
   labs(
     title = "Pairwise Angular Differences from Tukey's HSD",
-    x = "Difference in Mean Angular Deviation (Radians)",
+    x = "Difference in Mean Angular Deviation (Degrees)",
     y = "Comparison"
   ) +
   theme_minimal()
 
 print(angular_diff_plot)
-
-
-
 
 
 # ---------------------------------
@@ -620,7 +671,7 @@ print(y_diff_plot)
 
 
 
-# ----------------------------------
+# --------------- Motion Group Analysis -------------------
 
 # Assign motion equivalence groups with semantic names
 df <- df %>%
@@ -670,21 +721,6 @@ mean_deviation_data <- motion_data %>%
   group_by(Motion_Group) %>%
   summarize(Mean_Deviation = mean(Euclidean_Deviation, na.rm = TRUE))
 
-
-motion_box_plot <- ggplot(motion_data, aes(x = Motion_Group, y = Euclidean_Deviation, fill = Motion_Group)) +
-  geom_boxplot(alpha = 0.7, outlier.color = "red") +
-  labs(
-    title = "Box Plot of Mean Absolute Euclidean Deviations by Motion Group",
-    x = "Motion Group",
-    y = "Mean Absolute Euclidean Deviation"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "none"
-  )
-
-print(motion_box_plot)
 
 
 motion_violin_plot <- ggplot(motion_data, aes(x = Motion_Group, y = Euclidean_Deviation, fill = Motion_Group)) +
@@ -757,4 +793,72 @@ pairwise_t_test <- pairwise.t.test(
 )
 
 print(pairwise_t_test)
+
+
+
+# ----------------- Power Analysis ---------------
+
+
+# Additional calculations using standard errors (SE) and sample size
+n <- 10  # Sample size
+
+
+# SE values from the table (absolute values of the negatives)
+se_left_oblique_front <- abs(-0.24)
+se_left_hv_front <- abs(-0.24)
+se_left_oblique_left <- abs(-0.21)
+se_left_hv_left <- abs(-0.24)
+
+se_right_oblique_front <- abs(-0.18)
+se_right_hv_front <- abs(-0.19)
+se_right_oblique_right <- abs(-0.18)
+se_right_hv_right <- abs(-0.27)
+
+# Calculate SD values
+sd_left_oblique_front <- se_left_oblique_front * sqrt(n)
+sd_left_hv_front <- se_left_hv_front * sqrt(n)
+sd_left_oblique_left <- se_left_oblique_left * sqrt(n)
+sd_left_hv_left <- se_left_hv_left * sqrt(n)
+
+sd_right_oblique_front <- se_right_oblique_front * sqrt(n)
+sd_right_hv_front <- se_right_hv_front * sqrt(n)
+sd_right_oblique_right <- se_right_oblique_right * sqrt(n)
+sd_right_hv_right <- se_right_hv_right * sqrt(n)
+
+# Print the calculated SDs
+cat("SD values:\n")
+cat("Left Oblique Front:", sd_left_oblique_front, "\n")
+cat("Left HV Front:", sd_left_hv_front, "\n")
+cat("Left Oblique Left:", sd_left_oblique_left, "\n")
+cat("Left HV Left:", sd_left_hv_left, "\n")
+cat("Right Oblique Front:", sd_right_oblique_front, "\n")
+cat("Right HV Front:", sd_right_hv_front, "\n")
+cat("Right Oblique Right:", sd_right_oblique_right, "\n")
+cat("Right HV Right:", sd_right_hv_right, "\n")
+
+# Example for Cohen's d using these SDs
+# Define mean offsets for left and right (X-axis as an example)
+left_means_x <- c(1.59, 1.82)  # Oblique Front, HV Front
+right_means_x <- c(1.36, 1.29) # Oblique Front, HV Front
+
+# Compute mean of means
+mean_left_x <- mean(left_means_x)
+mean_right_x <- mean(right_means_x)
+
+# Pooled SD for Oblique Front and HV Front
+pooled_sd_x <- sqrt((sd_left_oblique_front^2 + sd_right_oblique_front^2) / 2)
+
+# Cohen's d for X-axis
+cohen_d_x <- (mean_left_x - mean_right_x) / pooled_sd_x
+cat("Cohen's d for X-axis:", cohen_d_x, "\n")
+# Perform power analysis with the new effect size
+power_analysis <- pwr.t.test(
+  d = cohen_d_x,
+  sig.level = 0.05,
+  power = 0.9,
+  type = "two.sample"
+)
+
+# Print the power analysis result
+print(power_analysis)
 
