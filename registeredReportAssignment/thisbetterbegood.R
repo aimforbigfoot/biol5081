@@ -523,7 +523,7 @@ angular_diff_plot <- ggplot(angular_tukey_df, aes(x = diff, y = reorder(paste(Gr
 print(angular_diff_plot)
 
 
-# ---------------------------------
+## --------------- X and Y Deviations ------------------
 
 # Compute X and Y deviations
 df <- df %>%
@@ -671,7 +671,7 @@ print(y_diff_plot)
 
 
 
-# --------------- Motion Group Analysis -------------------
+## --------------- Motion Group Analysis -------------------
 
 # Assign motion equivalence groups with semantic names
 df <- df %>%
@@ -796,6 +796,57 @@ print(pairwise_t_test)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# THIS MUST BE LINE 850 OR ELSE
 # ----------------- Power Analysis ---------------
 
 
