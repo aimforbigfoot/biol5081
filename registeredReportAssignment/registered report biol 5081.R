@@ -7,7 +7,7 @@ library(ggplot2)       # For creating plots
 library(gridExtra)     # For arranging multiple plots
 library(dplyr)         # For data manipulation
 library(tidyr)         # For reshaping data structures
-
+library(pwr)           # For power analysis
 ## ---------------- Parameters ---------------
 set.seed(123)
 # Define experiment parameters
@@ -432,12 +432,12 @@ df <- df %>%
   mutate(
     Cardinal_Offset = recode(movementCondition, !!!cardinal_offsets)  # Add cardinal offsets
   )
-df
+
 # Compute angular deviation based on adjusted cardinal reference
 df <- df %>%
   mutate(
-    Angle_Actual = (atan2(Y - Ego_Y.y, X - Ego_X.x) * (180 / pi)),  # Convert to degrees
-    Angle_Expected = (atan2(Y_expected - Ego_Y.y, X_expected - Ego_X.x) * (180 / pi)),
+    Angle_Actual = (atan2(Y - Ego_Y, X - Ego_X) * (180 / pi)),  # Convert to degrees
+    Angle_Expected = (atan2(Y_expected - Ego_Y, X_expected - Ego_X) * (180 / pi)),
     Angle_Actual_Adjusted = (Angle_Actual - Cardinal_Offset) %% 360,  # Adjust based on cardinal direction
     Angle_Expected_Adjusted = (Angle_Expected - Cardinal_Offset) %% 360,
     Angular_Deviation = (Angle_Actual_Adjusted - Angle_Expected_Adjusted) %% 360  # Compute deviation
@@ -866,8 +866,7 @@ cat("Cohen's d for X-axis:", cohen_d_x, "\n")
 power_analysis <- pwr.t.test(
   d = cohen_d_x,
   sig.level = 0.05,
-  power = 0.9,
-  type = "two.sample"
+  power = 0.9
 )
 
 # Print the power analysis result
