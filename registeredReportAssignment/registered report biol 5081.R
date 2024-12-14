@@ -140,6 +140,8 @@ df <- df %>% rename(movementCondition = moveCondition)
 print(df)
 
 # --------------- Visualization ---------------------
+
+## --------------- Raw Data Plot ---------------
 # Prepare data frames for plotting ego positions and measurement points
 ego_positions_df <- do.call(rbind, lapply(names(ego_positions_around_table), function(name) {
   data.frame(
@@ -157,14 +159,6 @@ points_to_measure_df <- do.call(rbind, lapply(names(pointsToMeasure), function(n
   )
 }))
 
-
-# Define custom colors for movement conditions and target positions
-movement_colors <- c(
-  "Initial" = "blue", 
-  "Opposite" = "red", 
-  "Adj CW" = "green", 
-  "Adj CCW" = "purple"
-)
 
 # Define custom colors for movement conditions and target positions
 movement_colors <- c(
@@ -236,7 +230,7 @@ print(raw_plot)
 
 
 
-# ---------------- Data reshapping for plotting the averaged data --------------
+# ---------------- Plotting Averaged Positional Data --------------
 
 # Summarize the data by PointName and movementCondition
 summary_data <- df %>%
@@ -813,40 +807,6 @@ print(pairwise_t_test)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# THIS MUST BE LINE 850 OR ELSE
 # ----------------- Power Analysis ---------------
 
 
