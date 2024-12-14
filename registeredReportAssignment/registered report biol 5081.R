@@ -1,6 +1,16 @@
 # ---------------- Data Generation Setup ------------
 # Purpose: This script generates simulated data for experiments evaluating positional deviations in response to different movement conditions.
 
+# Note: This script is computationally intensive and may heavily utilize the CPU. 
+# If you encounter an error, it is recommended to restart the script and rerun all sections 
+# to ensure the integrity and functionality of the data structures.
+
+
+
+# PS: Thank you so much for being an amazing professor this semester. 
+# Once again, I feel like you've truly saved my master's project. 
+# Best wishes and good luck with the pregnancy!
+
 ## ---------------- Library Importing ---------------
 # Load essential libraries for data manipulation, visualization, and statistics
 library(ggplot2)       # For creating plots
@@ -788,7 +798,7 @@ pairwise_t_test <- pairwise.t.test(
 
 print(pairwise_t_test)
 
-
+# ----------- End Of Simulation and Analysis Script -----------------
 
 
 
